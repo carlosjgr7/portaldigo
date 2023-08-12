@@ -1,0 +1,16 @@
+table {
+  border-collapse: collapse;
+}
+
+tr:nth-child(even) td {
+  background: #F1F1F1;
+}
+
+tr:nth-child(odd) td {
+  background: #FEFEFE;
+}
+
+.color-success {
+  background-color: #00aeef;
+}
+/*# sourceMappingURL=pagos.component.css.map */

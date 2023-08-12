@@ -1,0 +1,124 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div  fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card *ngIf="load">
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>EVENTO</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngIf="detalle.accion"> 
+            <h3 matLine>Acci&oacute;n: </h3>
+            <p matLine class="text-muted">{{detalle.accion.descripcion}}</p> 
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>Canal: </h3>
+            <p matLine class="text-muted">{{detalle.canal.nombre}}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>Usuario:</h3>
+            <p matLine class="text-muted">{{detalle.usuario.nombreCompleto}}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>Fecha:</h3>  
+            <p matLine class="text-muted">{{detalle.creado | date : 'dd-MM-yyyy HH:mm a' }}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>IP servidor: </h3>  
+            <p matLine class="text-muted">{{detalle.direccionIpServidor}}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>IP cliente: </h3>  
+            <p matLine class="text-muted">{{detalle.direccionIpCliente}}</p>
+          </mat-list-item>
+          <mat-list-item *ngIf="detalle.codigoError != 0"> 
+            <h3 matLine>ERROR: </h3>
+            <p matLine class="text-muted">{{detalle.codigoError}} - {{detalle.mensajeError}}</p> 
+          </mat-list-item>
+        </mat-list>  
+        <div align="right">
+            <button mat-button (click)="back()" color="basic" align="left">Volver</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div> 
+</div>
+
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div  fxFlex.gt-sm="100%" fxFlex="100" *ngIf="load">
+    <mat-card *ngIf="detalle.datos">
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>DATOS DE LA TRANSACCION</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+          <mat-list *ngFor="let clave of claves; let detail of detalle.datos">
+              <mat-list-item> 
+                <h3 matLine>{{clave}}</h3>
+                <p matLine style="white-space: unset;word-wrap: break-word;">{{detalle.datos[clave]}}</p> 
+              </mat-list-item>
+            </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div> 
+</div>
+
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div fxFlex.gt-sm="33.3%" fxFlex="100" *ngIf="load">
+    <mat-card *ngIf="detalle.recursoAntes">
+      <mat-card-header class="bg-danger text-white">
+        <mat-card-title>ANTES</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p style="word-wrap: break-word;white-space: unset;">{{detalle.recursoAntes | json}}</p>  
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex.gt-sm="33.3%" fxFlex="100" *ngIf="load">
+    <mat-card *ngIf="detalle.recursoAntes">
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>DESPU&Eacute;S</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <p style="word-wrap: break-word;white-space: unset;"> {{detalle.recursoDespues | json}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex.gt-sm="33.3%" fxFlex="100" *ngIf="load">
+    <mat-card *ngIf="detalle.recursoAntes">
+      <mat-card-header class="bg-success text-white">
+        <mat-card-title>CAMBIOS</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list *ngFor="let cambio of cambioRecurso">
+          <mat-list-item> 
+            <h3 matLine>Parametro:</h3>
+            <p matLine class="text-muted">{{cambio.parametro}}</p> 
+          </mat-list-item>
+          <mat-list-item> 
+            <h3 matLine>Acci&oacute;n:</h3>
+            <p matLine class="text-muted">{{cambio.accion}}</p> 
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>  
+</div>
+
+
+<div *ngIf="loading" fxLayout="row" fxLayoutWrap="wrap">
+  <div  fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>EVENTO</mat-card-title>
+      </mat-card-header>
+      <div *ngIf="loading"  align="center" style="margin-top: 50px; margin-bottom: 50px;">
+        <mat-spinner *ngIf="loading"  matSuffix diameter="35"></mat-spinner>
+        <br/>
+        <mat-label *ngIf="loading" style="margin-bottom: 50px;" class="sub-title text-muted">Cargando Datos del Evento</mat-label>
+        <br/>
+    </div>
+    </mat-card>
+ 
+  </div> 
+</div>

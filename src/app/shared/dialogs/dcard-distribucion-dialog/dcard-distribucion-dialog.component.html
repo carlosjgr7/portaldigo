@@ -1,0 +1,86 @@
+<h1 mat-dialog-title style="background-color: gray; width: fit-content" class="text-white">
+  &nbsp;&nbsp;&nbsp;{{ title }}:&nbsp;&nbsp;&nbsp;
+</h1>
+
+<div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px; margin-top: -20px">
+  <div class="sub-title">
+    <span class="text-muted">Nro Solicitud:&nbsp;</span>
+    <span style="font-weight: bold" *ngIf="gestiones">{{
+      gestiones[0]["nrosolic"]
+      }}</span>
+  </div>
+
+  <div class="sub-title">
+    <span class="text-muted">Fecha:&nbsp;</span>
+    <span style="font-weight: bold">{{ fecha }}</span>
+  </div>
+</div>
+
+<div mat-dialog-content style="overflow: hidden; overflow-y: auto">
+  <div style="max-width: 550px">
+    <div mat-dialog-actions style="
+        justify-content: space-between;
+        margin-inline: 5px;
+        margin-top: 5px;
+      ">
+      <div class="sub-title">
+        <span class="text-muted">Acci&oacute;n:&nbsp;</span>
+        <span style="font-weight: bold">Distribuci&oacute;n</span>
+      </div>
+
+      <div class="sub-title">
+        <span class="text-muted">Usuario:&nbsp;</span>
+        <span style="font-weight: bold">{{ afiliado["usuario"] }}</span>
+      </div>
+
+    </div>
+
+    <br />
+
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px">
+      <div class="sub-title" style="width: -webkit-fill-available">
+        <span class="text-muted">Nota:&nbsp;</span>
+        <div class="form-group">
+          <textarea class="form-control" id="nota" name="nota" rows="3" style="border: double"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions style="margin-inline: 5px">
+    <!-- <span class="text-muted">Tipo de Env&iacute;o:&nbsp;</span> -->
+
+    <mat-form-field style="padding-right: 30px">
+      <mat-label>Tipo de Env&iacute;o:&nbsp;</mat-label>
+      <mat-select name="tipo_envio" id="tipo_envio" [(ngModel)]="selected_tEnv">
+        <mat-option *ngFor="let tEnv of tipo_envio" [value]="tEnv.id">
+          {{tEnv.desc_cour}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions style="margin-inline: 5px">
+    <div class="sub-title" style="width: -webkit-fill-available">
+      <span class="text-muted">Nro Gu&iacute;a:&nbsp;</span>
+      <div class="form-group">
+        <input type="text" class="form-control" id="guia" name="guia" placeholder="Nro Gu&iacute;a"
+          style="border: double">
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <hr />
+</div>
+
+<div mat-dialog-actions style="justify-content: space-around">
+  <button mat-raised-button color="primary" (click)="guardar()" style="margin: 5px"
+    [disabled]="disabledButtonA === true">
+    Guardar
+  </button>
+
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>

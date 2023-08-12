@@ -1,0 +1,84 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        Nuevo banco
+                    </div>
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" align="right">
+                        <mat-slide-toggle
+                              class="example-margin"
+                              [color]="'primary'"
+                              [checked]="banco.activo"
+                              [(ngModel)]="banco.activo"
+                              name="checked">
+                            Activo  
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+                <br>
+                <form>
+                    <div align="center">
+                        <div class="alert-success" *ngIf="mensaje_success">
+                            {{mensaje_success}}
+                        </div>
+                    </div>
+
+                    <div align="center">
+                        <div class="alert-danger" *ngIf="mensaje">
+                            {{mensaje}}
+                        </div>
+                    </div>
+                    
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="C&oacute;digo"
+                         name="codigo" 
+                         [(ngModel)]="banco.codigo" appNumbersOnly> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Raz&oacute;n social"
+                         name="nombre" 
+                         [(ngModel)]="banco.nombre"
+                         maxlength="99" appFilter> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Nombre corto"
+                         name="nombre_corto" 
+                         [(ngModel)]="banco.nombreCorto"
+                         maxlength="49" appFilter> 
+                    </mat-form-field>
+
+                        <br><br><label>Servicios</label><br><br>
+                        <section class="example-section">
+                          <mat-checkbox name="p2p" class="example-margin" [(ngModel)]="P2P">P2P   </mat-checkbox>
+                          <mat-checkbox style="margin-left: 10px;" name="p2c" class="example-margin" [(ngModel)]="P2C">P2C    </mat-checkbox>
+                        </section>
+                    <div align="right">
+                        <a mat-button routerLink="/portal/catalogo/bancos" color="basic" align="left">Volver</a>
+                        <button mat-button
+                            *ngIf="!creado"
+                            (click)="crear()" 
+                            color="'primary'" 
+                            align="rigth"
+                            >
+                            Crear
+                        </button>
+                    </div>
+                </form>
+
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

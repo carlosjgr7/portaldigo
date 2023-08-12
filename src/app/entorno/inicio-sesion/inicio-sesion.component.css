@@ -1,0 +1,16 @@
+.mat-toolbar-single-row {
+  height: 30px !important;
+}
+
+@media (max-width: 767px) {
+  .mat-toolbar-single-row {
+    height: 30px !important;
+  }
+  .login-register .login-register-box {
+    max-width: 350px;
+  }
+  .titulo-inicio {
+    max-width: 80%;
+  }
+}
+/*# sourceMappingURL=inicio-sesion.component.css.map */

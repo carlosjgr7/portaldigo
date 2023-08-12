@@ -1,0 +1,19 @@
+<!-- ============================================================== -->
+<!-- Profile - style you can find in header.scss -->
+<!-- ============================================================== -->
+<div id="ide-usuario-desktop" mat-icon-button [matMenuTriggerFor]="profile" style="cursor: pointer;" >
+	<mat-icon>person</mat-icon>
+</div>
+
+<button mat-icon-button [matMenuTriggerFor]="profile" id="ide-usuario-mobile">
+    <mat-icon>person</mat-icon>
+</button>
+
+<mat-menu #profile="matMenu" class="mymegamenu">
+	<a mat-menu-item [routerLink]="['/portal/', 'cambio-clave']">
+        <mat-icon>settings</mat-icon> Cambiar contraseña
+    </a>
+    <button mat-menu-item (click)="onCerrarSesion()">
+        <mat-icon>exit_to_app</mat-icon> Cerrar sesión 
+    </button>
+</mat-menu>

@@ -1,0 +1,140 @@
+  <div fxLayout="row" fxLayoutWrap="wrap">
+ 
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{title}}</mat-card-title>
+        <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+      </mat-card-header>
+
+      <mat-tab-group (selectedTabChange)="onTabChange($event.tab.textLabel)" [(selectedIndex)]="currentTabIndex">
+        <mat-tab label="{{tab.nombre}}" *ngFor="let tab of tabs" [disabled]="loading">
+          <mat-card-content>
+            <p class="small-text"> {{tab.descripcion}} </p>
+
+          </mat-card-content>
+
+          <ng-template matTabContent> <!-- resuelve problema de seleccion de tab interno -->
+
+            <mat-tab-group (selectedTabChange)="onSubtabChange(tabs[currentTabIndex].subtabs[currentSubTabIndex].nombre)" [(selectedIndex)]="currentSubTabIndex">
+              <mat-tab label="{{stab.nombre}}" *ngFor="let stab of tab.subtabs" [disabled]="loading">
+                <mat-card-content>
+                  <p class="small-text"> {{stab.descripcion}} </p>
+                  <!-- if tab masivo o if tab individual -->
+
+                  <div fxLayout="row">
+                    <div fxFlex.gt-sm="32" fxFlex="100" class="p-10">
+                      <mat-form-field>
+                        <mat-select placeholder="Transacci&oacute;n" name="transaccion" [(ngModel)]="transaccion" [disabled]="loading">
+                          <mat-option></mat-option>
+                          <mat-option *ngFor="let transaccion of transacciones" [value]="transaccion.id">
+                            {{ transaccion.descripcion }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex.gt-sm="32" fxFlex="100" class="p-10">
+                      <mat-form-field>
+                        <mat-select placeholder="Cobro de la Operaci&oacute;n" name="operacion" [(ngModel)]="operacion" [disabled]="loading">
+                          <mat-option></mat-option>
+                          <mat-option *ngFor="let operacion of operaciones" [value]="operacion.id">
+                            {{ operacion.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex.gt-sm="32" fxFlex="100" class="p-10">
+                      <mat-form-field>
+                        <mat-select placeholder="Estado" name="estado" [(ngModel)]="estado" [disabled]="loading">
+                          <mat-option></mat-option>
+                          <mat-option [value]="1">Activo</mat-option>
+                          <mat-option [value]="0">Inactivo</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex.gt-sm="32" fxFlex="100" class="p-10" 
+                    *ngIf="tipocomision == 'actividad-economica' || (tipocomision == 'afiliado' && tipoUsuario == 'A')">
+                      <div>
+                        <mat-form-field [floatLabel]="'always'">
+                          <ng-autocomplete
+                            [data]="actividades"
+                            [searchKeyword]="keyword"
+                            placeHolder="Categoría del Comercio"
+                            (selected)='selectEvent($event)'
+                            (inputChanged)='onChangeSearch($event)'
+                            (inputFocused)='onFocused($event)'
+                            (closed)="onClosed($event)"
+                            name="actividadEconomica"
+                            [(ngModel)]="actividadEconomica"
+                            [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate"
+                            [disabled]="loading"
+                            notFoundText="No se ha encontrado">                                 
+                          </ng-autocomplete>
+                          <input matInput type="text" style="display: none;" [disabled]="loading">
+                          <mat-label *ngIf="actividadEconomica">Categoría del Comercio</mat-label>
+                        </mat-form-field>
+                        
+                        <ng-template #itemTemplate let-item>
+                          <a [innerHTML]="item.descripcion"></a>
+                        </ng-template>
+                         
+                        <ng-template #notFoundTemplate let-notFound>
+                          <div [innerHTML]="notFound"></div>
+                        </ng-template>
+                      </div>
+
+                    </div>
+                    <div fxFlex.gt-sm="32" fxFlex="100" class="p-10" *ngIf="tipocomision == 'afiliado'">
+                      <mat-form-field>
+                        <input matInput  placeholder="Afiliado" name="afiliado.nombre" [(ngModel)]="afiliado.nombre" appDocument appLettersNumbersOnly><!--(keydown)="limpiar($event)"-->
+                        <button type="button" *ngIf="!(id > 0)" class="no-hover-effect no-width-effect p-r-0" color="primary" 
+                          matSuffix mat-button matSuffix (click)="busquedaAfiliado()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                    
+                
+
+                  <!-- Form -->
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+                        <button align="" mat-raised-button color="accent" (click)="buscar(tabs.indexOf(tab), tab.subtabs.indexOf(stab) )">BUSCAR</button>
+                    </div>
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="stab.table.data.length > 0">
+                        <button align="" mat-raised-button color="primary" (click)="excel(stab)">EXCEL</button>
+                    </div>
+                  </div>
+
+                  <div *ngIf="message" fxLayout="row" fxLayoutAlign="center" class="p-t-20 m-t-20">
+                    <div [class]="message.class">{{message.text}}</div>
+                  </div>
+  
+                  <!-- Tabla -->
+                  <div class="table-container m-t-20" *ngIf="stab.table != undefined && stab.showTable && !message">
+                    <app-table [tableInit]="stab.table" 
+                      *ngIf="stab.table != undefined && stab.showTable" 
+                      (tableEvents)="onTableEvents($event)" ></app-table>                  
+                  </div>
+                
+                  <div align="right">
+                    <button mat-fab color="primary" (click)="onCrear()" class="font-medium">
+                      <mat-icon>plus_one</mat-icon>
+                    </button>
+                  </div>
+                </mat-card-content>
+                
+              </mat-tab>
+      
+            </mat-tab-group>
+          </ng-template>
+
+        </mat-tab>
+
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

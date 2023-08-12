@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Columnas</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-selection-list #selection>
+        <mat-list-option *ngFor="let column of columns" [value]="column.id" [selected]="column.selected" checkboxPosition="before">
+            {{column.name}}
+        </mat-list-option>
+    </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button (click)="changeColumns()">Cambiar</button>
+</mat-dialog-actions>

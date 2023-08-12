@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+  <p>{{message}}</p>
+  <!-- form -- ByService --> 
+  <!-- <div *ngIf="byService && questions != undefined">
+    <app-dynamic-form [questions]="questions" 
+    *ngIf=" questions.length > 0" 
+    (dynamicSubmit)="onSubmit($event)" ></app-dynamic-form>
+  </div> -->
+  <!-- table -->
+  <div *ngIf="dataTable != undefined"> <!-- Hay Data -->
+    <app-table [tableInit]="dialogTable" *ngIf="dialogTable != undefined" (tableEvents)="onTableEvents($event)"></app-table>
+  </div>
+
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-button *ngIf="canAcept" (click)="onAcept()">Aceptar</button>
+</div>

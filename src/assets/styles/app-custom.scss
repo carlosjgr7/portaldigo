@@ -1,0 +1,10 @@
+.no-hover-effect.mat-button .mat-button-focus-overlay
+{
+  background-color: transparent;
+}
+
+.no-width-effect.mat-button
+{
+  min-width: 0px;
+  line-height: 32px; /*para matsuffix en input espacio entre lineas*/
+}

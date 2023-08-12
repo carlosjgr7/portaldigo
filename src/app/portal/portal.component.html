@@ -1,0 +1,93 @@
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div class="main-container" [dir]="dir"
+    [ngClass]="{'minisidebar': minisidebar, 'boxed': boxed, 'danger': danger, 'blue': blue, 'green': green, 'dark': dark, 'sidebar-opened': sidebarOpened, 'sidebar-closed': false }">
+    <!-- ============================================================== -->
+    <!-- Topbar - style you can find in header.scss -->
+    <!-- ============================================================== -->
+    <mat-toolbar color="primary" class="topbar telative">
+        <!-- ============================================================== -->
+        <!-- Logo - style you can find in header.scss -->
+        <!-- ============================================================== -->
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                <!-- Logo icon
+                <b>
+                    You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                <!-- Dark Logo icon
+                    <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo">
+                    Light Logo icon 
+                    <img src="assets/images/logo-light-icon.png" alt="homepage" class="light-logo">
+                </b>-->
+                <!--End Logo icon -->
+                <!-- Logo text -->
+                <span style="width: 80%;" fxShow="false" fxShow.gt-xs>
+                    <!-- dark Logo text -->
+                    <!--<img src="assets/images/logo-text.png" alt="homepage" class="dark-logo">-->
+                    <!-- Light Logo text -->
+                    <img style="width: 100%;" src="assets/images/logo-light-text.png" alt="homepage" class="light-logo">
+                </span>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <button mat-icon-button (click)="snav.toggle()" value="sidebarclosed">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <!-- ============================================================== -->
+        <!-- Search - style you can find in header.scss -->
+        <!-- ============================================================== -->
+        <span fxFlex></span>
+        <!-- ============================================================== -->
+        <!-- app header component - style you can find in header.scss / header.component.ts-->
+        <!-- ============================================================== -->
+        <div align="right" id="ide-usuario" style="margin-right:20px; font-size: 16px;">
+            <div>{{user_name}}</div>
+            <div style="font-size: 14px;">Ultima conexion: {{ultima_conexion | date : 'dd/MM/yyyy HH:mm:ss a'}}</div>
+        </div>
+        <app-header></app-header>
+        <!-- ============================================================== -->
+        <!-- Right sidebar toggle - style you can find in rightsidebar.component.scss -->
+        <!-- ============================================================== -->
+    </mat-toolbar>
+    <!-- ============================================================== -->
+    <!-- End Topbar - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0"
+        [ngClass]="{'minisidebar': minisidebar}">
+        <!-- ============================================================== -->
+        <!-- Sidebar - style you can find in sidebar.scss -->
+        <!-- ============================================================== -->
+        <mat-sidenav #snav id="snav" class="dark-sidebar pl-xs" [mode]="mobileQuery.matches ? 'side' : 'over'"
+            fixedTopGap="0" [opened]="mobileQuery.matches" [disableClose]="mobileQuery.matches"
+            (open)="sidebarOpened = true" (close)="sidebarOpened = false">
+
+            <app-sidebar></app-sidebar>
+
+
+        </mat-sidenav>
+        <!-- ============================================================== -->
+        <!-- Sidebar - style you can find in sidebar.scss -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page container - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <mat-sidenav-content class="page-wrapper">
+
+            <div class="page-content">
+
+                <router-outlet>
+                    <app-spinner></app-spinner>
+                </router-outlet>
+
+            </div>
+
+        </mat-sidenav-content>
+        <!-- ============================================================== -->
+        <!-- Page container - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+    </mat-sidenav-container>

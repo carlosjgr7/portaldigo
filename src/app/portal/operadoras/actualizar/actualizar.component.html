@@ -1,0 +1,75 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        <mat-card-header>
+                            <mat-card-title>Modificar operadora</mat-card-title>
+                            <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                        </mat-card-header>
+                    </div>
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" align="right">
+                      <mat-slide-toggle
+                          class="example-margin"
+                          [color]="'primary'"
+                          [checked]="checked"
+                          [(ngModel)]="checked"
+                          name="checked">
+                        Activo  
+                      </mat-slide-toggle>
+                    </div>
+                </div>
+                <br>
+                <form>
+                    <div align="center">
+                        <div class="alert-success" *ngIf="mensaje_success">
+                            {{mensaje_success}}
+                        </div>
+                    </div>
+                    <div align="center">
+                        <div class="alert-danger" *ngIf="mensaje">
+                            {{mensaje}}
+                        </div>
+                    </div>
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="C&oacute;digo"
+                         name="codigo" 
+                         [(ngModel)]="operadora.codigo"
+                         type="text"
+                         maxlength="5" appNumbersOnly> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Nombre"
+                         name="nombre" 
+                         [(ngModel)]="operadora.nombre"
+                         type="text"
+                         maxlength="24" appFilter> 
+                    </mat-form-field>
+                    
+                    <div align="right">
+                        <a mat-button routerLink="/portal/catalogo/operadoras" color="basic" align="left">Volver</a>
+                        <button mat-button
+                            *ngIf="!actualizado"
+                            (click)="openDialog()" 
+                            color="'primary'" 
+                            align="rigth"
+                            >
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

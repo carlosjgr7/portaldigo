@@ -1,0 +1,15 @@
+<mat-card-header style="margin-left: -1.5%;">
+  <mat-card-title >ATENCI&Oacute;N</mat-card-title>
+  <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+</mat-card-header>
+<div mat-dialog-content>
+  <p *ngIf="!borrado" align="justify">¿Esta seguro de eliminar el usuario: {{data.usuario}}?</p>
+  <p *ngIf="mensaje_delete" class="text-danger" align="justify">{{mensaje_delete}}</p>
+</div>
+<div align="right" *ngIf="!borrado" mat-dialog-actions>
+  <button mat-button (click)="borrar(data.id, data.usuario)" tabindex="2">Si</button>
+  <button mat-button (click)="onNoClick()" tabindex="-1">No</button>
+</div>
+<div align="right" *ngIf="borrado" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" tabindex="-1">Ok</button>
+</div>

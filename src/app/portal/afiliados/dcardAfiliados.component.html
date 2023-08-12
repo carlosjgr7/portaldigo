@@ -1,0 +1,103 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-header class="bg-primary text-white">
+                <mat-card-title>GESTIONES DCARD</mat-card-title>
+            </mat-card-header>
+
+            <div *ngIf="loading" align="center" style="margin-top: 50px; margin-bottom: 50px">
+                <mat-spinner *ngIf="loading" matSuffix diameter="35"></mat-spinner>
+                <br />
+                <mat-label *ngIf="loading" style="margin-bottom: 50px" class="sub-title text-muted">Cargando Datos de
+                    las Gestiones DCARD
+                </mat-label>
+                <br />
+            </div>
+
+
+            <mat-card-content style="contain: content; overflow: auto" *ngIf="gestiones && gestiones[0] !== undefined">
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                        <div>
+                            <table class="table">
+                                <tr>
+                                    <th></th>
+                                    <th>Nº Solic</th>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Tel&eacute;fono</th>
+                                    <th>Identificaci&oacute;n</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" align="center" *ngIf="loading">
+                                        <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let gestion of gestiones" style="height: 50px">
+                                    <td align="center">
+                                        <a routerLink="../../detalles/{{ gestion.user_solic  }}" class="link">
+                                            <mat-icon>search</mat-icon>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">{{ gestion.nrosolic }}</td>
+                                    <td>{{ gestion.usuario }}</td>
+                                    <td>{{ gestion.nombre_completo }}</td>
+                                    <td>{{ gestion.numero_telefono }}</td>
+                                    <td>{{ gestion.identificacion }}</td>
+                                    <td *ngIf="gestion.estatus == 'A'" align="center">
+                                        <mat-chip-list>
+                                            <mat-chip style="
+                                              background-color: #67ef0b;
+                                              color: black;
+                                              font-weight: bold;
+                                            " color="accent" selected="true">
+                                                Activo
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </td>
+                                    <td *ngIf="gestion.estatus == 'I'" align="center">
+                                        <mat-chip-list>
+                                            <mat-chip color="accent" style="font-weight: bold" selected="true">
+                                                Inactivo
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </td>
+                                    <td *ngIf="gestion.estatus == 'B'" align="center">
+                                        <mat-chip-list>
+                                            <mat-chip color="warn" style="font-weight: bold" selected="true">
+                                                Bloqueado
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </td>
+                                    <td *ngIf="gestion.estatus == 'PV'" align="center">
+                                        <mat-chip-list>
+                                            <mat-chip style="
+                                              background-color: #ffe70c;
+                                              color: black;
+                                              font-weight: bold;
+                                            " color="warn" selected="true">
+                                                Por Verificar
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+            </mat-card-content>
+
+            <mat-card-content style="contain: content; overflow: auto" *ngIf="gestiones && gestiones[0] === undefined">
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <h3 style="font-weight: bold; margin-top: 50px;">No Hay Solicitudes Disponibles</h3>
+                    <br><br><br><br><br><br>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

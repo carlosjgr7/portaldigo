@@ -1,0 +1,153 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->    
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card>
+          <mat-card-content>
+              <!-- Row -->
+              <div fxLayout="row" fxLayoutWrap="wrap">
+                  <!-- column -->
+                  <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                    <mat-card-header>
+                      <mat-card-title>Log de Transporte </mat-card-title>
+                      <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                    </mat-card-header>
+                        
+
+                  </div>
+              </div>
+              
+              <div fxLayout="row" fxLayoutWrap="wrap">
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                            <input matInput
+                            
+                            [min]="startDate" [max]="fechaMax" 
+                            [matDatepicker]="picker" 
+                            placeholder="Desde" 
+                            [(ngModel)]="fechaDesde" 
+                            name="fechaDesde" 
+                            disabled>
+                            <mat-datepicker-toggle ui-date="{ dateFormat: 'yy-mm-dd' }" matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                          <mat-form-field>
+                            <input matInput 
+                            [min]="fechaDesde" [max]="fechaMax"
+                            [matDatepicker]="picker3" 
+                            placeholder="Hasta"
+                            [(ngModel)]="fechaHasta" 
+                            name="fechaHasta" disabled>
+                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                            <mat-datepicker #picker3 disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                  </div>
+              
+              <div fxLayout="row" fxLayoutWrap="wrap">
+                  <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput placeholder="Usuario" name="usuario" [(ngModel)]="usuario" appLettersNumbersOnly>
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <mat-select placeholder="Canal" name="canal" [(ngModel)]="canal">
+                          <mat-option>TODOS</mat-option>
+                        <mat-option *ngFor="let canal of canales" value="{{canal.id}}">{{canal.nombre}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <!-- column -->
+                  <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <mat-select placeholder="Acci&oacute;n" name="accion" [(ngModel)]="accion">
+                              <mat-option>TODAS</mat-option>
+                        <mat-option *ngFor="let accion of acciones" value="{{accion.id}}">{{accion.descripcion}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+              </div>
+              <br>
+              <div fxLayout="row" fxLayoutWrap="wrap">
+                  <!-- column -->
+                  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;" >
+                      <button align="" mat-raised-button color="accent" (click)="buscar()">BUSCAR</button>
+                  </div>
+                  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="!loading && buscaron" >
+                          <button align="" mat-raised-button color="primary" (click)="excel()">EXCEL</button>
+                  </div>
+              
+              </div>
+          </mat-card-content>
+          <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                      <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                          {{global_alert.mensaje}}
+                      </div>
+                  </div>
+          </div>
+
+          <mat-card-content>
+              <!-- column -->
+                  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" *ngIf="!global_alert.act">
+                      <table class="table">
+                          <tr>
+                              <th></th>
+                              <th>Fecha</th>
+                              <th>Canal</th>
+                              <th>Usuario</th>
+                              <th>Acci&oacute;n</th>
+                              <th>Tarifa</th>
+                              <th></th>
+                          </tr>
+                          <tr *ngFor="let evento of eventos" style="height: 50px;">
+                              <td align="center">
+                                  <a routerLink="/portal/transporte/log-transporte/detalles/{{evento.id}}" class="link">
+                                      <mat-icon>search</mat-icon> 
+                                  </a>
+                              </td>
+                              <td>{{evento.creado | date : 'dd/MM/yyyy HH:mm a'}}</td>
+                              <td>
+                                  {{evento.canal.nombre}}
+                              </td>
+                              <td matTooltip="{{evento.usuario.nombreCompleto}}" matTooltipPosition="above">
+                                  {{evento.usuario.usuario}}
+                              </td>
+                              <td>{{evento.accion.descripcion}}</td>
+                              <!-- <td>{{tarifa}}</td> -->
+                              <td>{{evento.tarifa}}</td>
+                              <td *ngIf="evento.codigoError == 0 && evento.mensajeError==null" 
+                              align="center">
+                                  <mat-chip-list>
+                                    <mat-chip color="accent" selected="true">
+                                        <mat-icon>done</mat-icon> 
+                                    </mat-chip>
+                                  </mat-chip-list>
+                              </td>
+                              <td *ngIf="evento.codigoError != 0 || evento.mensajeError!=null" 
+                              matTooltip="{{evento.mensajeError}}" 
+                              matTooltipPosition="above" 
+                              align="center">
+                                  <mat-chip-list>
+                                    <mat-chip color="warn" selected="true">
+                                        <mat-icon>clear</mat-icon> 
+                                    </mat-chip>
+                                  </mat-chip-list>
+                              </td>
+                          </tr>
+                      </table>
+                      <br>
+                      <div align="CENTER" *ngIf="n_eventos == 25 && fechaDesde != undefined  && fechaHasta != undefined && eventos!=null && eventos.length > 0">
+                          <button align="" mat-raised-button color="primary" (click)="verMas()">VER MAS</button><mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                      </div>
+
+                  </div>
+          </mat-card-content>
+      </mat-card>
+  </div>
+</div>

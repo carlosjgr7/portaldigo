@@ -1,0 +1,67 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        Cambiar contraseña
+                    </div>
+                </div>
+                <br>
+                <form>
+                    <div align="center" *ngIf="global_alert.act">
+                        <div class="{{global_alert.type}}">
+                            {{global_alert.mensaje}}
+                        </div>
+                    </div>
+                    
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Actual contraseña"
+                         name="contrasenaActual" 
+                         [(ngModel)]="clave.contrasenaActual"
+                         maxlength="49"
+                         type="password" appPassword> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Nueva contraseña"
+                         name="contrasenaNueva" 
+                         [(ngModel)]="clave.contrasenaNueva"
+                         maxlength="49"
+                         type="password" appPassword> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Confirme clave"
+                         name="contrasenaNueva2" 
+                         [(ngModel)]="contrasenaNueva"
+                         maxlength="49"
+                         type="password" appPassword> 
+                    </mat-form-field>
+                    
+                    <div align="right">
+                        <button mat-button routerLink="/portal" color="basic" align="left">Cancelar</button>
+                        <button mat-button
+                            *ngIf="!cambiado"
+                            (click)="cambiar()" 
+                            color="primary" 
+                            align="rigth"
+                            >
+                            Cambiar
+                        </button>
+                    </div>
+                </form>
+
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

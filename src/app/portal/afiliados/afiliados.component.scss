@@ -1,0 +1,25 @@
+table { border-collapse: collapse;}
+
+tr:nth-child(even) td { background: #F1F1F1; }  
+
+tr:nth-child(odd) td { background: #FEFEFE; } 
+
+/**
+Para modificar estilos originales de ng-autocomplete
+*/
+::ng-deep .autocomplete-container {
+    box-shadow: none !important;
+    font-family: Effra, sans-serif;
+    height: 18px !important;
+
+}
+
+::ng-deep .autocomplete-container .input-container input {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    font-family: Effra, sans-serif !important;
+    padding: 0 0 !important;
+    line-height: 18px !important;
+    height: 18px !important;
+    background-color: transparent !important;
+}

@@ -1,0 +1,296 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>Afiliados </mat-card-title>
+      </mat-card-content>
+      <mat-tab-group (selectedTabChange)="onSequenceChangeEvent()">
+        <mat-tab label="Naturales">
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                <mat-form-field>
+                  <input matInput placeholder="Filtro" name="filtro" [(ngModel)]="filtro" appFilter />
+                </mat-form-field>
+              </div>
+              <!-- column -->
+              <div fxFlex.gt-sm="30" fxFlex.gt-xs="50" align="LEFT" style="padding-top: 1%">
+                <button (click)="buscar('B', filtro)" align="" mat-raised-button color="accent">
+                  BUSCAR
+                </button>
+              </div>
+              <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" align="right" style="padding-top: 1%" *ngIf="n_naturales != 0">
+                <button align="" mat-raised-button color="primary" (click)="excel(1)">
+                  EXCEL
+                </button>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayoutWrap="wrap" style="justify-content: space-around;">
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="dcard/B" class="link text-white"> DCARD </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="recep/B" class="link text-white"> RECEP </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="dist/B" class="link text-white"> DIST </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a (click)="reporte('B')" class="link text-white"> REPORTES </a>
+                </button>
+              </div>
+            </div>
+
+            <br />
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <div *ngIf="global_alert.act" class="{{ global_alert.type }}">
+                  {{ global_alert.mensaje }}
+                </div>
+              </div>
+            </div>
+            <br />
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <div>
+                  <table class="table">
+                    <tr>
+                      <th></th>
+                      <th>Usuario</th>
+                      <th>Nombre</th>
+                      <th>Tel&eacute;fono</th>
+                      <th>Identificaci&oacute;n</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    <tr>
+                      <td colspan="7" align="center" *ngIf="loading">
+                        <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                      </td>
+                    </tr>
+                    <tr *ngFor="
+                        let afiliado of afiliados_naturales;
+                        let i = index
+                      " style="height: 50px">
+                      <td align="center">
+                        <a routerLink="detalles/{{ afiliado.id }}" class="link">
+                          <mat-icon>search</mat-icon>
+                        </a>
+                      </td>
+                      <td>{{ afiliado.usuario }}</td>
+                      <td>{{ afiliado.nombreCompleto }}</td>
+                      <td>{{ afiliado.numeroTelefono }}</td>
+                      <td>{{ afiliado.identificacion }}</td>
+                      <td *ngIf="afiliado.estatus == 'A'" align="center">
+                        <mat-chip-list>
+                          <mat-chip style="
+                              background-color: #67ef0b;
+                              color: black;
+                              font-weight: bold;
+                            " color="accent" selected="true">
+                            Activo
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'I'" align="center">
+                        <mat-chip-list>
+                          <mat-chip color="accent" style="font-weight: bold" selected="true">
+                            Inactivo
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'B'" align="center">
+                        <mat-chip-list>
+                          <mat-chip color="warn" style="font-weight: bold" selected="true">
+                            Bloqueado
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'PV'" align="center">
+                        <mat-chip-list>
+                          <mat-chip style="
+                              background-color: #ffe70c;
+                              color: black;
+                              font-weight: bold;
+                            " color="warn" selected="true">
+                            Por Verificar
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td align="center" style="cursor: pointer">
+                        <a (click)="openDialog(afiliado.id, afiliado.usuario)" class="link">
+                          Desafiliar
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <button *ngIf="n_naturales > 24" mat-raised-button color="primary"
+                  (click)="verMas('B', ultimo_natural)">
+                  Ver mas
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="Jur&iacute;dicos">
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                <mat-form-field>
+                  <input matInput placeholder="Filtro" name="filtro" [(ngModel)]="filtro" appFilter />
+                </mat-form-field>
+              </div>
+              <!-- column -->
+              <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" align="CENTER">
+                <button (click)="buscar('A', filtro)" align="" mat-raised-button color="accent">
+                  BUSCAR
+                </button>
+              </div>
+              <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" align="center" *ngIf="n_juridicos != 0">
+                <button align="" mat-raised-button color="primary" (click)="excel(2)">
+                  EXCEL
+                </button>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayoutWrap="wrap" style="justify-content: space-around;">
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="dcard/A" class="link text-white"> DCARD </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="recep/A" class="link text-white"> RECEP </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a routerLink="dist/A" class="link text-white"> DIST </a>
+                </button>
+              </div>
+              <div align="center" style="padding-top: 1%">
+                <button mat-raised-button color="primary">
+                  <a (click)="reporte('A')" class="link text-white"> REPORTES </a>
+                </button>
+              </div>
+            </div>
+
+            <br />
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <div *ngIf="global_alert.act" class="{{ global_alert.type }}">
+                  {{ global_alert.mensaje }}
+                </div>
+              </div>
+            </div>
+            <br />
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <div>
+                  <table class="table">
+                    <tr>
+                      <th></th>
+                      <th>Usuario</th>
+                      <th>Nombre</th>
+                      <th>Tel&eacute;fono</th>
+                      <th>Identificaci&oacute;n</th>
+                      <th></th>
+                    </tr>
+                    <tr>
+                      <td colspan="7" align="center" *ngIf="loading">
+                        <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let afiliado of afiliados_juridicos" style="height: 50px">
+                      <td align="center">
+                        <a routerLink="detalles/{{ afiliado.id }}" class="link">
+                          <mat-icon>search</mat-icon>
+                        </a>
+                      </td>
+                      <td>{{ afiliado.usuario }}</td>
+                      <td>{{ afiliado.nombreCompleto }}</td>
+                      <td>{{ afiliado.numeroTelefono }}</td>
+                      <td>{{ afiliado.identificacion }}</td>
+                      <td *ngIf="afiliado.estatus == 'A'" align="center">
+                        <mat-chip-list>
+                          <mat-chip style="
+                              background-color: #67ef0b;
+                              color: black;
+                              font-weight: bold;
+                            " color="accent" selected="true">
+                            Activo
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'I'" align="center">
+                        <mat-chip-list>
+                          <mat-chip color="accent" style="font-weight: bold" selected="true">
+                            Inactivo
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'B'" align="center">
+                        <mat-chip-list>
+                          <mat-chip color="warn" style="font-weight: bold" selected="true">
+                            Bloqueado
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td *ngIf="afiliado.estatus == 'PV'" align="center">
+                        <mat-chip-list>
+                          <mat-chip style="
+                              background-color: #ffe70c;
+                              color: black;
+                              font-weight: bold;
+                            " color="warn" selected="true">
+                            Por Verificar
+                          </mat-chip>
+                        </mat-chip-list>
+                      </td>
+                      <td align="center" style="cursor: pointer">
+                        <a (click)="openDialog(afiliado.id, afiliado.usuario)" class="link">
+                          Desafiliar
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                <button *ngIf="n_juridicos > 24" mat-raised-button color="primary"
+                  (click)="verMas('A', ultimo_juridico)">
+                  Ver mas
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

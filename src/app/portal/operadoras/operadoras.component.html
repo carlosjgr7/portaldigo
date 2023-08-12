@@ -1,0 +1,72 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        <mat-card-header>
+                            <mat-card-title>Operadoras</mat-card-title>
+                            <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                        </mat-card-header>
+                    </div>
+                </div>
+                <br>
+                <div align="center">
+                        <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                            {{global_alert.mensaje}}
+                        </div>
+                    </div>
+                <table class="table" *ngIf="hay_operadora">
+
+                    <tr style="height: 50px;">
+                        <th>
+                            <div class="font-medium">
+                                C&oacute;digo
+                            </div>
+                        </th>
+                        <th>
+                            <div class="font-medium">
+                                Operadora
+                            </div>
+                        </th>
+                        <th>
+                            
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    <tr *ngFor="let operadora of operadoras" style="height: 50px;">
+                        <td>
+                            {{operadora.codigo}}
+                        </td>
+                        <td>
+                            {{operadora.nombre}}
+                        </td>
+                        <td align="center">
+                            <mat-chip-list>
+                              <mat-chip *ngIf="operadora.activo" color="primary" selected="true">Activo</mat-chip>
+                                <mat-chip *ngIf="!operadora.activo" color="warn" selected="true">Inactivo</mat-chip>
+                            </mat-chip-list>
+                        </td>
+                        <td align="center" style="cursor:pointer;">
+                            <a routerLink="actualizar/{{operadora.id}}" class="link">Modificar</a> | 
+                            <a (click)="openDialog(operadora.id ,operadora.nombre)" class="link">Eliminar</a>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+
+                <div align="right">
+                    <button mat-fab color="primary" routerLink="crear" class="font-medium"><mat-icon>plus_one</mat-icon></button>
+                </div>
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

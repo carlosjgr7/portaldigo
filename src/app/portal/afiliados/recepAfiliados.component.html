@@ -1,0 +1,49 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-header class="bg-primary text-white">
+                <mat-card-title>RECEPCI&Oacute;N DCARD</mat-card-title>
+            </mat-card-header>
+
+            <div *ngIf="loading" align="center" style="margin-top: 50px; margin-bottom: 50px">
+                <mat-spinner *ngIf="loading" matSuffix diameter="35"></mat-spinner>
+                <br />
+                <mat-label *ngIf="loading" style="margin-bottom: 50px" class="sub-title text-muted">Cargando Datos de
+                    las Gestiones DCARD
+                </mat-label>
+                <br />
+            </div>
+
+            <mat-card-content style="contain: content; overflow: auto">
+                <div fxLayout="row" fxLayoutWrap="wrap">
+
+                    <!-- column -->
+                    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+
+                        <div mat-dialog-actions style="margin-inline: 5px">
+                            <div class="sub-title" style="width: -webkit-fill-available">
+                                <span class="text-muted">Cod. Tarjeta</span>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="cod" name="cod"
+                                        placeholder="Cod. Tarjeta" style="border: solid" autofocus>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br><br>
+                    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER" style="margin-top: 10px;">
+                        <button mat-raised-button color="primary" (click)="guardar()" style="margin: 5px">
+                            Buscar
+                        </button>
+                    </div>
+
+                </div>
+
+                <hr />
+            </mat-card-content>
+
+        </mat-card>
+    </div>
+</div>

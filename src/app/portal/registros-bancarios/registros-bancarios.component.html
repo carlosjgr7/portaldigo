@@ -1,0 +1,186 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{title}}</mat-card-title>
+        <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+      </mat-card-header>
+
+      <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="{{tab.nombre}}" *ngFor="let tab of tabs" >
+          <mat-card-content>
+            <p class="small-text"> {{tab.descripcion}} </p>
+            <!-- if tab masivo o if tab individual -->
+            <div  *ngIf="global_alert.act" fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="center">
+                  <div class="{{global_alert.type}}" >
+                      {{global_alert.mensaje}}
+                  </div>
+              </div>
+          </div>
+            <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+              <div [class]="message.class">{{message.text}}</div>
+            </div>
+          
+            <div *ngIf="tab.nombre == 'Registro Individual'" >
+              <!-- Form -->
+              <form [formGroup]="form" (ngSubmit)="crearRegistro()">
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                  <div fxFlex.gt-sm="20" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput [formControl]="form.controls['fecha']" [matDatepicker]="pickerDesde" 
+                      placeholder="Fecha de Carga" date readonly >
+                      <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerDesde></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex.gt-sm="20" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <mat-select [formControl]="form.controls['banco']" placeholder="Banco" [disabledControl]="loading">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let option of bancos" [value]="option.id">
+                          {{ option.nombreCorto ? option.nombreCorto : option.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex.gt-sm="20" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput [formControl]="form.controls['referencia']" placeholder="Referencia" appNumbersOnly>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex.gt-sm="20" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput [formControl]="form.controls['descripcion']" placeholder="Descripcion" appFilter>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex.gt-sm="20" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput [formControl]="form.controls['monto']" placeholder="Monto"  maxlength="22" (keyup)="limpiar()" textCampoMonto (cambioValor)="$event"><!--appNumbersPuntuation-->
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="p-10" fxLayoutAlign="center">
+                  <button type="submit" class="m-t-10" color="primary"
+                  mat-raised-button [disabled]="form.invalid || loading">
+                    <mat-icon>post_add</mat-icon> Crear Registro
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div *ngIf="tab.nombre == 'Registro Masivo'">
+              <!-- Form -->
+              <form [formGroup]="formMasivo" (ngSubmit)="cargarArchivo()">
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                  <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <mat-select [formControl]="formMasivo.controls['banco']" placeholder="Banco" [disabledControl]="loading">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let option of bancos" [value]="option.id">
+                          {{ option.nombreCorto ? option.nombreCorto : option.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                      <input matInput [formControl]="formMasivo.controls['archivo']" placeholder="Archivo" readonly>
+                      <button mat-button matSuffix class="no-hover-effect no-width-effect" 
+                      color="primary" type="button" (click)="uploadFile(inputFile)">
+                        <mat-icon>search</mat-icon>
+                      </button>
+                    </mat-form-field>
+                    <input [id]="inputFile" type="file" accept=".txt, .asc" hidden (change)="onFileChange($event.target.files)">
+                  </div>
+                </div>
+                <div class="p-10" fxLayoutAlign="center">
+                  <button type="submit" class="m-t-10" color="primary"
+                  mat-raised-button [disabled]="formMasivo.invalid || loading">
+                    <mat-icon>publish</mat-icon> Cargar Archivo
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+    </mat-tab-group>
+    </mat-card>
+
+    <!-- Extractos -->
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>Movimientos Bancarios</mat-card-title>
+      </mat-card-content>
+      
+      <mat-card-content>
+
+        <!-- filtros -->
+        <form [formGroup]="formMovimientos" (ngSubmit)="onSearch()">
+          <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <input matInput [formControl]="formMovimientos.controls['desde']" [matDatepicker]="pickerDesde" placeholder="Desde" 
+                date readonly (dateChange)="onFormChange()">
+                <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDesde></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <input matInput [formControl]="formMovimientos.controls['hasta']" [matDatepicker]="pickerHasta" placeholder="Hasta" 
+                date readonly (dateChange)="onFormChange()">
+                <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                <mat-datepicker #pickerHasta></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <mat-select [formControl]="formMovimientos.controls['idEstatusMov']" [disabledControl]="loading"
+                placeholder="Estatus" (selectionChange)="onFormChange()">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let option of estatusMovimientos" [value]="option.id">
+                    {{option.descripcion}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <mat-select [formControl]="formMovimientos.controls['banco']" [disabledControl]="loading"
+                placeholder="Banco *" (selectionChange)="onFormChange()">
+                  <mat-option></mat-option>
+                  <mat-option *ngFor="let option of bancosMovimientos" [value]="option.id">
+                    {{option.nombreCorto ? option.nombreCorto : option.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <input matInput [formControl]="formMovimientos.controls['referencia']" placeholder="Referencia" (appNumbersOnly)="onFormChange()">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+              <mat-form-field>
+                <input matInput [formControl]="formMovimientos.controls['descripcion']" placeholder="Descripción" (keyup)="onFormChange()" appFilter>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="p-10" fxLayoutAlign="center">
+            <button type="submit" class="m-t-10" color="primary" mat-raised-button [disabled]="formMovimientos.invalid || loading">
+              <mat-icon>search</mat-icon> Buscar
+            </button>
+          </div>
+        </form>
+        
+        <!-- Tabla -->
+        <div class="table-container" *ngIf="movimientosTable != undefined && movimientosTable.data.length != 0">
+          <app-table [tableInit]="movimientosTable" *ngIf="movimientosTable != undefined" (tableEvents)="onTableEvents($event)" ></app-table>                  
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

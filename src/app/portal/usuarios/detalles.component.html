@@ -1,0 +1,68 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>USUARIO</mat-card-title>
+      </mat-card-header>
+
+
+      <div *ngIf="!usuario" align="center" style="margin-top: 50px; margin-bottom: 50px;">
+        <mat-spinner *ngIf="!usuario" matSuffix diameter="35"></mat-spinner>
+        <br />
+        <mat-label *ngIf="!usuario" style="margin-bottom: 50px;" class="sub-title text-muted">Cargando Datos del Usuario
+        </mat-label>
+        <br />
+      </div>
+      <mat-card-content>
+
+        <div align="center">
+          <div *ngIf="global_alert.act" class="{{global_alert.type}}">
+            {{global_alert.mensaje}}
+          </div>
+        </div><br>
+        <div fxLayout="row" fxLayoutWrap="wrap">
+          <!-- column -->
+          <div fxFlex.gt-sm="100" fxFlex.gt-xs="100">
+            <mat-list *ngIf="usuario && usuario.id">
+              <mat-list-item>
+                <h3 matLine>Tipo de usuario</h3>
+                <p matLine class="text-muted">{{usuario.rol.descripcion}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Usuario</h3>
+                <p matLine class="text-muted">{{usuario.usuario}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Nombre</h3>
+                <p matLine class="text-muted">{{usuario.nombreCompleto}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Correo</h3>
+                <p matLine class="text-muted">{{usuario.correo}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Estatus</h3>
+                <p matLine class="text-muted">{{usuario.estatus}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Ultima actualizaci&oacute;n de clave</h3>
+                <p matLine class="text-muted">{{usuario.fechaContrasena | date : 'dd-MM-yyyy HH:mm a' }}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Fecha de creaci&oacute;n</h3>
+                <p matLine class="text-muted">{{usuario.creado | date : 'dd-MM-yyyy HH:mm a' }}</p>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+        </div>
+        <div align="right">
+          <button *ngIf="!passwdReestablecida" mat-button (click)="openDialog(id)" color="accent"
+            align="left">Restablecer Contraseña</button>
+          <button mat-button routerLink="/portal/usuarios" color="basic" align="left">Volver</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

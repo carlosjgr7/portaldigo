@@ -1,0 +1,44 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- Card column  -->
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-header class="bg-primary text-white">
+                <mat-card-title>DETALLE DE RECARGA</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+            </mat-card-header>
+            <div *ngIf="loading"  align="center" style="margin-top: 50px; margin-bottom: 50px;">
+              <mat-spinner *ngIf="loading"  matSuffix diameter="35"></mat-spinner>
+              <br/>
+              <mat-label *ngIf="loading" style="margin-bottom: 50px;" class="sub-title text-muted">Cargando Datos de la Recarga</mat-label>
+              <br/>
+            </div>
+            <mat-card-content>
+                <mat-list *ngIf="success">
+                  <mat-list-item> 
+                    <h3 matLine>Fecha de pago: </h3>
+                    <p matLine class="text-muted">{{recarga.fechaTransaccion | date : 'dd-MM-yyyy HH:mm a'}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Tel&eacute;fono receptor: </h3>
+                    <p matLine class="text-muted">{{recarga.numeroDestino}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Monto: </h3>
+                    <p matLine class="text-muted">{{recarga.montoRecarga}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Concepto: </h3>
+                    <p matLine class="text-muted">{{recarga.concepto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Referencia: </h3>
+                    <p matLine class="text-muted">{{recarga.referencia_2}}</p> 
+                  </mat-list-item>
+              </mat-list>
+              <div align="right">
+                  <button mat-button routerLink="/portal/pago_de_servicios/digitel" color="basic" align="left">Volver</button>
+              </div>
+            </mat-card-content>
+        </mat-card>    
+    </div>
+</div>

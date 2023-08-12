@@ -1,0 +1,57 @@
+<div fxLayout="row wrap" fxLayout.xs="column">
+    <div fxFlex.xl="25%" fxFlex.lg="25%" fxFlex.md="25%" fxFlex.sm="25%" class="p-10">
+      <h2>Afiliados</h2> 
+    </div>
+    <div fxFlex.xl="65%" fxFlex.lg="65%" fxFlex.md="65%" fxFlex.sm="65%" class="p-10">
+        <mat-card class="dialog-message-center">
+            <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+                <div [class]="message.class">{{message.text}}</div>
+            </div>
+      </mat-card>
+    </div>
+</div>
+<div mat-dialog-content>
+    <div fxLayout="row" class="p-10">
+      <div class="p-r-10">
+        <mat-form-field>
+          <input matInput [(ngModel)]="razon" placeholder="Afiliado" appLettersNumbersOnly><!--(keydown)="noPermitirEspacio($event)"-->
+        </mat-form-field>
+      </div>
+      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+        <button align="" mat-raised-button color="accent" (click)="buscar()" 
+        [disabled]="razon == undefined || (razon && razon.length < 4)">
+          BUSCAR
+        </button>
+      </div>
+    </div>
+    <div *ngIf="showTable">
+        <div class="table-container" >
+          <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+              <ng-container matColumnDef="identificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Afiliado</th>
+                <td mat-cell *matCellDef="let afiliado">{{ afiliado.identificacion ? afiliado.identificacion : '' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="nombrecompleto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Indentificación</th>
+                <td mat-cell *matCellDef="let afiliado">{{ afiliado.nombreCompleto ? afiliado.nombreCompleto : '' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let afiliado" align="right">
+                  <button mat-button type="button" (click)="onIdAfiliado(afiliado)" color="primary" class="no-hover-effect">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+          <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20, 25]" showFirstLastButtons>
+          </mat-paginator>
+        </div>
+    </div>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="end" >
+  <button mat-button (click)="onClose()">Cerrar</button>
+</div>

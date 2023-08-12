@@ -1,0 +1,158 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{title}}</mat-card-title>
+        <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+    </mat-card-header>
+      
+    <mat-card-content>
+        <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+            <div [class]="message.class">{{message.text}}</div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSearch()">
+            <div fxLayout="row" fxLayoutWrap="wrap">
+                <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <mat-select [formControl]="form.controls['idEstatus']" [disabledControl]="loading"
+                        placeholder="Estado Orden de Pago *" (selectionChange)="onFormChange()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of estatusOrdenes" [value]="option.id">
+                                {{ option.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <input matInput [formControl]="form.controls['desde']" [matDatepicker]="pickerDesde"
+                        placeholder="Desde" date readonly (dateChange)="onFormChange()">
+                        <button type="button" class="no-hover-effect no-width-effect" color="warn" 
+                        *ngIf="!loading && form.value.desde != null" mat-button matSuffix 
+                        (click)="form.controls['desde'].setValue(null);  onFormChange();">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerDesde></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <input matInput [formControl]="form.controls['hasta']" [matDatepicker]="pickerHasta"
+                        placeholder="Hasta" date readonly (dateChange)="onFormChange()">
+                        <button type="button" class="no-hover-effect no-width-effect" color="warn" 
+                        *ngIf="!loading && form.value.hasta != null" mat-button matSuffix 
+                        (click)="form.controls['hasta'].setValue(null); onFormChange();">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerHasta></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <mat-select [formControl]="form.controls['idBancoDestino']" [disabledControl]="loading"
+                        placeholder="Banco Destino" (selectionChange)="onFormChange()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of bancosActivos" [value]="option.id">
+                                {{ option.nombreCorto ? option.nombreCorto : option.nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form.value.idEstatus != 1" fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <mat-select [formControl]="form.controls['idMedioPago']" [disabledControl]="loading"
+                        placeholder="Forma de Pago" (selectionChange)="onFormChange()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of mediosPago" [value]="option.id">{{ option.nombre }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form.value.idEstatus != 1" fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <mat-select [formControl]="form.controls['idCuentaOrigen']" [disabledControl]="loading"
+                        placeholder="Cuenta Origen" (selectionChange)="onFormChange()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of cuentasOrigen" [value]="option.id">
+                                {{ option.banco.nombreCorto}} **** {{ option.cuenta |  slice:-4 }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form.value.idEstatus != 1" fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+                    <mat-form-field>
+                        <input matInput [formControl]="form.controls['idLote']" [disabledControl]="loading"
+                        placeholder="N° Lote de Liquidación" (appNumbersOnly)="onFormChange()">
+                    </mat-form-field>
+                </div>
+
+            </div>
+        
+            <div class="p-10" fxLayoutAlign="center">
+                <button type="submit" class="m-t-10" color="primary"
+                mat-raised-button [disabled]="form.invalid || loading">
+                    <mat-icon>search</mat-icon> Buscar
+                </button>
+            </div>
+        
+        </form>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="showResumen">
+    <mat-card-content>
+        <!-- <div fxLayout="row" *ngIf="form.value.idEstatus == 1">
+            Debe Seleccionar una Cuenta Origen y un Medio de Pago para Generar Lote
+        </div> -->
+        <div fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="space-between">
+            <!-- Cuenta Origen para estatus 1-->
+            <div fxFlex="100%" *ngIf="form.value.idEstatus == 1">
+                <form [formGroup]="formResumen">
+                    <mat-form-field>
+                        <mat-select [formControl]="formResumen.controls['cuentaOrigen']" [disabledControl]="loading"
+                        placeholder="Cuenta Origen *" (selectionChange)="onCuentaOrigen()">
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let option of cuentasOrigen" [value]="option.id">
+                                {{ option.banco.nombreCorto}} **** {{ option.cuenta |  slice:-4 }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </form>
+            </div>
+
+            <div class="p-t-10"> <b>Cantidad de Ordenes de Pago:</b> </div>
+            <div class="text-value p-t-10"> {{resumen.cantidadOrdenes}} </div>
+
+            <div class="p-t-10"> <b>Monto Total:</b> </div>
+            <div class="text-value p-t-10"> {{ resumen.monto}} </div>
+
+            <div class="p-t-10"> <b>Forma de Pago:</b> </div>
+            <div class="text-value p-t-10"> {{resumen.medioPago}} </div>
+
+            <div class="p-t-10"> <b>Banco Destino:</b> </div>
+            <div class="text-value p-t-10"> {{resumen.bancoDestino}} </div>
+
+            <div class="p-t-10"> <b>Cantidad de Clientes:</b> </div>
+            <div class="text-value p-t-10"> {{resumen.cantidadClientes}} </div>
+            
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" class="p-10" *ngIf="form.value.idEstatus == 1">
+            <button type="button" class="m-t-10" color="primary" (click)="generarLote()"
+            mat-raised-button [disabled]="formResumen.invalid || ordenesEnLote.length < 1 || loading">
+                Generar Lote
+            </button>
+        </div>
+
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="liquidacionTable != undefined && liquidacionTable.data.length > 0">
+    <mat-card-content>
+        <app-table 
+            [tableInit]="liquidacionTable" 
+            *ngIf="liquidacionTable != undefined && liquidacionTable.data.length > 0" 
+            (tableEvents)="onTableEvents($event)">
+        </app-table>
+    </mat-card-content>
+</mat-card>

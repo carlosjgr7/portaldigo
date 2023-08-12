@@ -1,0 +1,238 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card>
+      <mat-card-header class="bg-primary text-white">
+        <mat-card-title>AFILIADO</mat-card-title>
+      </mat-card-header>
+      <mat-card-content *ngIf="afiliado && afiliado.tipoPersona">
+
+        <div fxLayout.gt-sm="row" fxLayout="column">
+
+          <div fxFlex.gt-sm="25%" fxFlex="100">
+
+            <mat-list>
+              <mat-list-item>
+                <h3 matLine>Usuario</h3>
+                <p matLine class="text-muted">{{afiliado.usuario}}</p>
+              </mat-list-item>
+
+              <mat-list-item>
+                <h3 matLine>Tipo persona</h3>
+                <p matLine class="text-muted">{{afiliado.tipoPersona}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Identificaci&oacute;n</h3>
+                <p matLine class="text-muted">{{afiliado.identificacion}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Nombre</h3>
+                <p matLine class="text-muted">{{afiliado.nombreCompleto}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Correo</h3>
+                <p matLine class="text-muted">{{afiliado.correo}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Ultima actualizaci&oacute;n clave</h3>
+                <p matLine class="text-muted">{{afiliado.fechaContrasena | date : 'dd-MM-yyyy HH:mm a'}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Creado</h3>
+                <p matLine class="text-muted">{{afiliado.creado | date : 'dd-MM-yyyy HH:mm a'}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Ultima actualizaci&oacute;n</h3>
+                <p matLine *ngIf="noModificado" class="text-muted">{{afiliado.modificado | date : 'dd-MM-yyyy HH:mm a'}}
+                </p>
+                <p matLine *ngIf="!noModificado" class="text-muted">No ha sido actualizado</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>C&oacute;digo cliente</h3>
+                <p matLine class="text-muted">{{afiliado.idCliente}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Tel&eacute;fono</h3>
+                <p matLine class="text-muted">{{afiliado.numeroTelefono}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>N&uacute;mero de cuenta</h3>
+                <p matLine class="text-muted">{{afiliado.numeroCuenta}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Tipo de cuenta</h3>
+                <p matLine class="text-muted">{{afiliado.tipoCuenta}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Ultima conexi&oacute;n</h3>
+                <p matLine class="text-muted">{{afiliado.ultimaConexion | date : 'dd-MM-yyyy HH:mm a'}}</p>
+              </mat-list-item>
+              <mat-list-item>
+                <h3 matLine>Limite diario</h3>
+                <p matLine class="text-muted">{{afiliado.limiteDiarioDisponible}}</p>
+              </mat-list-item>
+
+            </mat-list>
+
+          </div>
+
+          <div fxLayout="column" fxFlex.gt-sm="75%" fxFlex="100%">
+
+            <div fxLayout="row">
+              <div class="p-t-20" fxFlex.gt-sm="25%" fxFlex="100%">
+                <mat-form-field>
+                  <mat-select #listaEstatus placeholder="Estatus del usuario" name="estatus"
+                    [(ngModel)]="afiliado.estatus" [disabled]="!permisos" (click)="mostrarErrorPermisos()">
+                    <!-- (click)="validarPermisos()" -->
+                    <mat-option value="A">Activo</mat-option>
+                    <mat-option value="I">Inactivo</mat-option>
+                    <mat-option value="B">Bloqueado</mat-option>
+                    <mat-option value="PV">Por Verificar</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row">
+              <span fxFlex.gt-sm="65%" fxFlex="100">
+                <div>
+                  <mat-label class="sub-title">Recaudos</mat-label>
+                  <div *ngFor="let recaudo of recaudos;let i=index">
+                    <div fxLayout="row">
+                      <div class="p-t-20" fxFlex.gt-sm="25%" fxFlex="100%">
+                        <!-- tipo doc-->
+                        <mat-label class="sub-title">Tipo Recaudo</mat-label>
+                        <p matLine class="text-muted">{{recaudo.tipoDocumento}}</p>
+                      </div>
+                      <div class="p-t-20" fxFlex.gt-sm="25%" fxFlex="100%">
+                        <!-- check box-->
+                        <mat-label class="sub-title">Enterado</mat-label>
+                        <p>
+                          <mat-checkbox [disabled]="!recaudo.recaudoObj" [(ngModel)]="recaudo.enterado"></mat-checkbox>
+                        </p>
+                      </div>
+                      <div class="p-t-20" fxFlex.gt-sm="25%" fxFlex="100%">
+                        <!-- boton-->
+                        <mat-label class="sub-title">Visualizar</mat-label>
+                        <p><button mat-icon-button [disabled]="!recaudo.recaudoObj" matSuffix color="primary"
+                            type="button" (click)="visualizarArchivo(i)" [attr.aria-label]="'Visualizar Archivo'">
+                            <mat-icon style="color:#262262;">{{!recaudo.recaudoObj ? 'visibility_off' : 'visibility'}}
+                            </mat-icon>
+                          </button> </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </div>
+
+            <span *ngIf="afiliado.tipoPersona == 'A'">
+
+              <div fxLayout="row">
+                <span fxFlex.gt-sm="65%" fxFlex="100%">
+                  <div>
+                    <mat-form-field [floatLabel]="'always'">
+                      <ng-autocomplete [data]="categorias" [searchKeyword]="keyword" placeHolder="Actividad Económica"
+                        (selected)='selectEventCategoria($event)' (inputChanged)='onChangeSearchCategoria($event)'
+                        (inputFocused)='onFocusedCategoria($event)' (inputCleared)='onClearCategoria($event)'
+                        (closed)="onClosedCategoria($event)" [(ngModel)]="afiliado.categoria"
+                        [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate" [disabled]="loading"
+                        notFoundText="No se ha encontrado">
+                      </ng-autocomplete>
+                      <input matInput type="text" style="display: none;">
+                      <mat-label *ngIf="afiliado.categoria">Actividad Económica</mat-label>
+                    </mat-form-field>
+
+                    <ng-template #itemTemplate let-item>
+                      <a [innerHTML]="item.descripcion"></a>
+                    </ng-template>
+
+                    <ng-template #notFoundTemplate let-notFound>
+                      <div [innerHTML]="notFound"></div>
+                    </ng-template>
+                  </div>
+
+                </span>
+              </div>
+
+              <div fxLayout="row">
+                <span fxFlex.gt-sm="65%" fxFlex="100%">
+                  <div>
+                    <mat-form-field [floatLabel]="'always'">
+                      <ng-autocomplete [data]="subCategorias" [searchKeyword]="keyword"
+                        placeHolder="Categoría del Comercio" (selected)='selectEvent($event)'
+                        (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)'
+                        (inputCleared)='onClearSub($event)' (closed)="onClosed($event)" [(ngModel)]="afiliado.actividad"
+                        [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                        [disabled]="loading || !afiliado.categoria" notFoundText="No se ha encontrado">
+                      </ng-autocomplete>
+                      <input matInput type="text" style="display: none;" [disabled]="loading || !afiliado.categoria">
+                      <mat-label *ngIf="afiliado.actividad">Categoría del Comercio</mat-label>
+                    </mat-form-field>
+
+                    <ng-template #itemTemplate let-item>
+                      <a [innerHTML]="item.descripcion"></a>
+                    </ng-template>
+
+                    <ng-template #notFoundTemplate let-notFound>
+                      <div [innerHTML]="notFound"></div>
+                    </ng-template>
+                  </div>
+
+                </span>
+              </div>
+
+              <div fxLayout="row">
+                <span class="p-t-20 p-r-10"> Cierre Automático Grandes Facturadores: </span>
+                <span fxFlex.gt-sm="10%" fxFlex="15%">
+                  <mat-form-field>
+                    <mat-select placeholder="" name="liqAuto" [(ngModel)]="afiliado.liqAuto"
+                      (selectionChange)="liqAutoChange()">
+                      <mat-option [value]="true">Si</mat-option>
+                      <mat-option [value]="false">No</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </span>
+              </div>
+
+              <div fxLayout="row" *ngIf="afiliado && (afiliado.liqAuto == 'true' || afiliado.liqAuto == true)">
+                <span class="p-t-20 p-r-20" fxLayout="column">
+                  <span>Banco/ Número de Cuenta </span>
+                  <span *ngFor="let cuenta of cuentas" class="p-t-20 text-muted"
+                    [ngClass]="{'m-t-20': cuentas.indexOf(cuenta) > 0 }">
+                    {{cuenta.nombreBanco}} {{cuenta.cuentaBanco}}
+                  </span>
+                </span>
+                <span class="p-t-20" fxLayout="column">
+                  <span>Procentaje de Deposito</span>
+                  <span fxLayoutAlign="center" *ngFor="let cuenta of cuentas">
+                    <span fxFlex.gt-sm="30%" fxFlex="30%">
+                      <mat-form-field>
+                        <input matInput [(ngModel)]="cuenta.porcLiqAuto" name="porcLiqAuto" placeholder=""
+                          (appNumbersPuntuation)="onPorcChange()" minlength="1" maxlength="6">
+                      </mat-form-field>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </span>
+
+
+          </div>
+
+        </div>
+
+
+
+
+        <div align="right">
+          <button mat-button routerLink="/portal/afiliados" color="basic" align="left">Volver</button>
+          <button mat-button [disabled]="(afiliado.tipoPersona == 'A' && afiliado.id_act_ec == undefined )"
+            (click)="guardar()" color="primary" align="rigth">
+            Guardar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

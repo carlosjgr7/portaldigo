@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+  <p style="white-space: pre-line;">{{message}}</p>
+</div>
+<div mat-dialog-actions align="center">
+    <pdf-viewer *ngIf="!isImg" [src]="fileUrl" [render-text]="true"
+    [zoom]="zoom" [show-borders]="true" [show-all]="false" [fit-to-page]="false" ></pdf-viewer>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-raised-button (click)="onClick('Validar')" color="primary">Validar recaudo</button>
+  <button mat-button (click)="onClick('Cancelar')" color="warn">Cancelar</button>
+</div>

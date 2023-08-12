@@ -1,0 +1,147 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+      <mat-card>
+        <mat-card-content>
+            <mat-card-title></mat-card-title>
+            <!-- Row -->
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <!-- column -->
+              <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                <mat-card-header>
+                  <mat-card-title>{{id > 0 ? ( isDesabled ? 'Consulta' :'Actualizar') : 'Nueva'}} Comisión</mat-card-title>
+                  <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                </mat-card-header>  
+                  
+              </div>
+              <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" align="right">
+                  <mat-slide-toggle
+                        class="example-margin"
+                        [color]="'primary'"
+                        [checked]="estatus"
+                        [(ngModel)]="estatus"
+                        [disabled]="loading || comisionNueva || isDesabled"
+                        name="estatus">
+                      Activo  
+                  </mat-slide-toggle>
+              </div>
+            </div>
+          <br>
+          <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+            <div [class]="message.class">{{message.text}}</div>
+          </div>
+          <form #form="ngForm">              
+                <mat-card-content>
+                  <mat-form-field *ngIf="tipocomision == 3">
+                    <input matInput  placeholder="Afiliado" name="afiliado.nombre" [(ngModel)]="afiliado.nombre" readonly [disabled]="loading || comisionNueva || id > 0" required>
+                    <button type="button" *ngIf="!(id > 0) && !comisionNueva" class="no-hover-effect no-width-effect p-r-0" color="primary" matSuffix mat-button matSuffix (click)="busquedaAfiliado()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                  </mat-form-field>
+                  <div *ngIf="tipocomision == 2">
+                    <div>
+                      <mat-form-field [floatLabel]="'always'">
+                        <ng-autocomplete
+                          [data]="categorias"
+                          [searchKeyword]="keyword"
+                          placeHolder="Actividad Económica *"
+                          (selected)='selectEventCategoria($event)'
+                          (inputChanged)='onChangeSearchCategoria($event)'
+                          (inputFocused)='onFocusedCategoria($event)'
+                          (inputCleared)='onClearCategoria($event)'
+                          (closed)="onClosedCategoria($event)"
+                          [(ngModel)]="categoriaEconomica"
+                          name="categoriaEconomica"
+                          [itemTemplate]="itemTemplate"
+                          [notFoundTemplate]="notFoundTemplate"
+                          [disabled]="loading || comisionNueva || id > 0"
+                          notFoundText="No se ha encontrado">                                 
+                        </ng-autocomplete>
+                        <input matInput type="text" style="display: none;" [disabled]="loading || comisionNueva || id > 0">
+                        <mat-label *ngIf="categoriaEconomica">Actividad Económica</mat-label>
+                      </mat-form-field>
+                      
+                      <ng-template #itemTemplate let-item>
+                        <a [innerHTML]="item.descripcion"></a>
+                      </ng-template>
+                       
+                      <ng-template #notFoundTemplate let-notFound>
+                        <div [innerHTML]="notFound"></div>
+                      </ng-template>
+                    </div>
+                    
+                    <div>
+                      <mat-form-field [floatLabel]="'always'">
+                        <ng-autocomplete
+                          [data]="actividadesEconomicas"
+                          [searchKeyword]="keyword"
+                          placeHolder="Categoría del Comercio *"
+                          (selected)='selectEvent($event)'
+                          (inputChanged)='onChangeSearch($event)'
+                          (inputFocused)='onFocused($event)'
+                          (closed)="onClosed($event)"
+                          [(ngModel)]="actividadEconomica"
+                          name="actividadEconomica"
+                          required
+                          [itemTemplate]="itemTemplate"
+                          [notFoundTemplate]="notFoundTemplate"
+                          [disabled]="loading || comisionNueva || id > 0 || !categoriaEconomica "
+                          notFoundText="No se ha encontrado">                                 
+                        </ng-autocomplete>
+                        <input matInput type="text" style="display: none;" 
+                        [disabled]="loading || comisionNueva || id > 0 || !categoriaEconomica">
+                        <mat-label *ngIf="actividadEconomica">Categoría del Comercio</mat-label>
+                      </mat-form-field>
+                      
+                      <ng-template #itemTemplate let-item>
+                        <a [innerHTML]="item.descripcion"></a>
+                      </ng-template>
+                       
+                      <ng-template #notFoundTemplate let-notFound>
+                        <div [innerHTML]="notFound"></div>
+                      </ng-template>
+                    </div>
+                  </div>
+
+                  <mat-form-field>
+                    <mat-select placeholder="Transacci&oacute;n" name="transaccion" [(ngModel)]="transaccion" required [disabled]="loading || comisionNueva || id > 0">
+                      <mat-option *ngFor="let transaccion of transacciones" [value]="transaccion.id">
+                        {{ transaccion.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-select placeholder="Tipo de Valor" name="tipoValor" [(ngModel)]="tipoValor" (selectionChange)="onChangeTipoValor()"  required [disabled]="loading || comisionNueva || (id > 0 && isDesabled)">
+                      <mat-option *ngFor="let tipoValor of tiposValores" [value]="tipoValor.id">
+                        {{ tipoValor.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <input *ngIf="tipoValor == 'MONTO' || tipoValor == undefined" matInput placeholder="Valor" name="valor" [(ngModel)]="valor" required [disabled]="loading || comisionNueva || (id > 0 && isDesabled) || tipoValor == undefined"  maxlength="22"  textCampoMonto (cambioValor)="monto = $event"> 
+                    <input *ngIf="tipoValor == 'PORCENTAJE'" matInput placeholder="Valor" name="valor" [(ngModel)]="valor" required [disabled]="loading || comisionNueva || (id > 0 && isDesabled) || tipoValor == undefined" maxlength="5" appPorcentajeDecimalNumber> 
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-select placeholder="Cobro de la Operaci&oacute;n" name="operacion" [(ngModel)]="operacion" required [disabled]="loading || comisionNueva || id > 0">
+                      <mat-option *ngFor="let operacion of operaciones" [value]="operacion.id">
+                        {{ operacion.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+  
+                  <div align="right">
+                    <button mat-button routerLink="/portal/comisiones" color="basic" align="left">Volver</button>
+                    <button mat-button (click)="onGuardar()" color="primary" align="rigth" 
+                    [disabled]="form.invalid || loading || comisionNueva || (id > 0 && isDesabled) || (tipocomision == 2 && idActEc == undefined)"> 
+                      Guardar
+                    </button>
+                  </div>
+      
+                </mat-card-content>
+          
+          </form>
+        </mat-card-content>
+          
+      </mat-card>    
+  </div>
+</div>

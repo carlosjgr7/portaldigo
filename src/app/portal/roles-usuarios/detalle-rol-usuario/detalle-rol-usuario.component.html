@@ -1,0 +1,302 @@
+<mat-card>
+
+    <mat-card-content>
+
+        <div fxLayout="row">
+            <mat-card-title>{{title}}</mat-card-title>
+            <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+        </div>
+
+        <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+          <div [class]="message.class">{{message.text}}</div>
+        </div>
+
+        <form #group="ngForm" (ngSubmit)="onGuardar()" autocomplete="off">
+
+            <div *ngIf="tipo == 'U'" fxLayout="row" fxLayoutAlign="end" class="p-10">
+                <mat-slide-toggle 
+                  class="example-margin"
+                  [color]="'primary'"
+                  [checked]="form.estatus"
+                  [(ngModel)]="form.estatus"
+                  [disabled]="loading"
+                  name="form.estatus">
+                    Activo  
+                </mat-slide-toggle>
+            </div>
+
+            <div *ngIf="tipo == 'R'" fxLayout="row" fxLayoutAlign="end" class="p-10">
+                <mat-slide-toggle 
+                  class="example-margin"
+                  [color]="'primary'"
+                  [checked]="form.activo"
+                  [(ngModel)]="form.activo"
+                  [disabled]="loading"
+                  name="form.activo">
+                    Activo  
+                </mat-slide-toggle>
+            </div>
+    
+            <div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field *ngIf="accion != 'crear'">
+                    <input matInput [(ngModel)]="form.usuario" name="form.usuario"
+                    placeholder="Usuario" (keyup)="onFormChange()" readonly>
+                </mat-form-field>
+                <mat-form-field *ngIf="accion == 'crear'">
+                    <input matInput [(ngModel)]="form.usuario" name="form.usuario"
+                    placeholder="Usuario" (keyup)="onFormChange()" appLettersNumbersOnly>
+                </mat-form-field>
+            </div>
+            
+    
+            <div  *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field *ngIf="accion == 'detalle'">
+                    <input matInput [(ngModel)]="form.nombreCompleto" name="form.nombreCompleto" (keyup)="onFormChange()"
+                    [placeholder]="tipo == 'R' ? 'Nombre' : 'Nombre y Apellido'" required readonly>
+                </mat-form-field>
+                <mat-form-field *ngIf="accion != 'detalle'">
+                    <input matInput [(ngModel)]="form.nombreCompleto" name="form.nombreCompleto" (keyup)="onFormChange()"
+                    [placeholder]="tipo == 'R' ? 'Nombre' : 'Nombre y Apellido'" required >
+                </mat-form-field>
+            </div>
+
+            <div  *ngIf="tipo == 'R'" fxLayout="row">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="form.nombre" name="form.nombre" (keyup)="onFormChange()"
+                    [placeholder]="tipo == 'R' ? 'Nombre' : 'Nombre y Apellido'" required>
+                </mat-form-field>
+            </div>
+    
+            <div *ngIf="tipo == 'R'" fxLayout="row">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="form.descripcion" name="form.descripcion"
+                    placeholder="Descripción" (keyup)="onFormChange()">
+                </mat-form-field>
+            </div>
+    
+            <div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field *ngIf="accion == 'detalle'">
+                    <input matInput [(ngModel)]="form.correo" name="form.correo" email
+                    placeholder="Correo Electrónico" (keyup)="onFormChange()" readonly>
+                </mat-form-field>
+                <mat-form-field *ngIf="accion != 'detalle'">
+                    <input matInput [(ngModel)]="form.correo" name="form.correo" email
+                    placeholder="Correo Electrónico" (keyup)="onFormChange()">
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field [floatLabel]="'always'">
+                    <mat-select  placeholder="Rol de usuario" name="rol" [(ngModel)]="rol" (selectionChange)="onRolChange($event)">
+                        <mat-option *ngFor="let rol of roles" value="{{rol.id}}" [disabled]="accion == 'detalle'">{{rol.nombre}}</mat-option>
+                      </mat-select>
+                    <!--<ng-multiselect-dropdown
+                        placeholder="'Roles'"
+                        data="roles"
+                        [(ngModel)]="rolesSeleccionados"
+                        (ngModelChange)="rolChange($event)"
+                        settings="dropdownSettings"
+                        ngModelOptions="{standalone: true}">
+                    </ng-multiselect-dropdown>-->
+                    <input matInput type="text" style="display: none;" [disabled]="loading">
+                    <mat-label *ngIf="rolesSeleccionados && rolesSeleccionados.length > 0">Rol</mat-label>
+                </mat-form-field>
+                <!-- <mat-form-field>
+                    <mat-select [(ngModel)]="form.rol" name="form.rol"
+                    placeholder="Rol" (selectionChange)="onFormChange()">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let option of roles" [value]="option.id">
+                            {{option.nombre}} - {{ option.descripcion }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+            </div>
+
+            <div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="descripcionRol" name="form.descripcionRol" readonly
+                    placeholder="Tipo de Usuario" value="descripcionRol">
+                    <!--<mat-select [(ngModel)]="form.idTipoUsuario" name="form.idTipoUsuario" required
+                    placeholder="Tipo de Usuario" (selectionChange)="onFormChange()">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let option of tiposUsuarios" [value]="option.idEmpresa">
+                            {{ option.descripcion }}
+                        </mat-option>
+                    </mat-select>-->
+                </mat-form-field>
+            </div>
+    
+            <div *ngIf="tipo == 'R'">
+                <div fxLayout="row">
+                    <mat-form-field>
+                        <!-- Solo Para Label -->
+                        <input matInput [(ngModel)]="form.opciones" name="form.opciones" 
+                        placeholder="Opciones" readonly>
+                    </mat-form-field>
+                </div>
+                <!-- Filas y Columnas de modulos -->
+                <div fxLayout="row wrap" fxLayoutAlign="space-around">
+                    <div *ngFor="let opcion of opciones" fxFlex="100" fxFlex.gt-sm="30">
+                        <span *ngIf="opcion.nombre == 'style'">
+                            <span fxFlex="80" fxFlex.gt-sm="50"></span>
+                            <span fxFlex="20" fxFlex.gt-sm="10"></span>
+                        </span>
+                        <span *ngIf="opcion.nombre != 'style'">
+                            <span fxFlex="80" fxFlex.gt-sm="50">{{ opcion.nombre }}</span>
+                            <span fxFlex="20" fxFlex.gt-sm="10">
+                                <mat-checkbox 
+                                [(ngModel)]="opcion.checked" 
+                                [disabled]="loading || isDetalleDisabled"
+                                [ngModelOptions]="{standalone: true}"
+                                (change)="onCheck($event.checked, opcion)">
+                                </mat-checkbox>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div *ngIf="tipo == 'R' && tabOptions && tabOptions.length > 0">
+                <div fxLayout="row">
+                    <mat-form-field> -->
+                        <!-- Solo para label -->
+                        <!-- <input matInput [(ngModel)]="form.tabs" name="form.tabs" placeholder="Opciones/Pestañas" readonly>
+                    </mat-form-field>
+                </div> -->
+                <!-- Filas y Columnas de pestañas de modulos -->
+                <!-- <div *ngFor="let tab of tabOptions" fxLayout="row">
+                    <span fxFlex="80" fxFlex.gt-sm="40">{{ tab.nombrePadre }} / {{tab.nombre}}</span>
+                    <span fxFlex="20" fxFlex.gt-sm="10">
+                        <mat-checkbox 
+                        [(ngModel)]="tab.checked" 
+                        [disabled]="'false'" 
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="onCheckTab($event.checked, tab)">
+                        </mat-checkbox>
+                    </span>
+                </div>
+                
+            </div> -->
+    
+            <!-- <div *ngIf="tipo == 'R'">
+                <div fxLayout="row">
+                    <mat-form-field> -->
+                        <!-- Solo para label -->
+                        <!-- <input matInput [(ngModel)]="form.acciones" name="form.acciones" placeholder="Opciones/Acciones" readonly>
+                    </mat-form-field>
+                </div> -->
+                <!-- Filas y Columnas de servicios de modulos -->
+                <!-- <div *ngFor="let servicio of acciones" fxLayout="row">
+                    <span fxFlex="80" fxFlex.gt-sm="40">{{ servicio.accion.modulo }} / {{servicio.accion.descripcion}}</span>
+                    <span fxFlex="20" fxFlex.gt-sm="10">
+                        <mat-checkbox 
+                        [(ngModel)]="servicio.checked" 
+                        [disabled]="'false'" 
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="onCheckServicio($event.checked, servicio)">
+                        </mat-checkbox>
+                    </span>
+                </div>
+                
+            </div> -->
+
+            <div *ngIf="tipo == 'R' && tabOptions && tabOptions.length > 0">
+                
+                <div fxLayout="row">
+                    <mat-form-field>
+                        <!-- Solo para label -->
+                        <input matInput [(ngModel)]="form.tabs" name="form.tabs" placeholder="Pestañas" readonly>
+                    </mat-form-field>
+                </div>
+                <!-- Filas y Columnas de pestañas de modulos 
+                <div *ngFor="let tab of tabOptions" fxLayout="row">
+                    <span fxFlex="80" fxFlex.gt-sm="40">{{ tab.descripcionPadre }} / {{tab.descripcion}}</span>
+                    <span fxFlex="20" fxFlex.gt-sm="10">
+                        <mat-checkbox 
+                        [(ngModel)]="tab.checked" 
+                        [disabled]="loading || isDetalleDisabled"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="onCheckTab($event.checked, tab)">
+                        </mat-checkbox>
+                    </span>
+                </div>
+                -->
+                <div *ngIf="tabOptions && tabla && tabla.tabs">
+                    <app-table 
+                        [tableInit]="tabla.tabs" 
+                        *ngIf="tabla.tabs != undefined && tabla.tabs.data.length > 0" 
+                        (tableEvents)="onTableEvents($event)">
+                    </app-table>
+                </div>
+            </div>
+    
+            <div *ngIf="tipo == 'R'">
+                <div fxLayout="row">
+                    <mat-form-field>
+                        <!-- Solo para label -->
+                        <input matInput [(ngModel)]="form.acciones" name="form.acciones" placeholder="Acciones" readonly>
+                    </mat-form-field>
+                </div>
+                <!-- Filas y Columnas de servicios de modulos 
+                <div *ngFor="let servicio of acciones" fxLayout="row">
+                    <span fxFlex="80" fxFlex.gt-sm="40">{{ servicio.accion.modulo }} / {{servicio.accion.descripcion}}</span>
+                    <span fxFlex="20" fxFlex.gt-sm="10">
+                        <mat-checkbox 
+                        [(ngModel)]="servicio.checked" 
+                        [disabled]="servicio.obligatorio || loading || isDetalleDisabled" 
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="onCheckServicio($event.checked, servicio)">
+                        </mat-checkbox>
+                    </span>
+                </div> -->
+                <div *ngIf="acciones && acciones.length > 0 && tabla && tabla.acciones && tabla.acciones.data.length > 0"
+                class="p-b-20">
+                    <app-table 
+                        *ngIf="tabla.acciones != undefined && tabla.acciones.data.length > 0" 
+                        [tableInit]="tabla.acciones" 
+                        (tableEvents)="onTableEvents($event)">
+                    </app-table>
+                </div>
+                
+            </div>
+    
+            
+
+            <div *ngIf="tipo == 'U' && accion == 'detalle'" fxLayout="row">
+                <mat-form-field *ngIf="accion == 'detalle'">
+                    <input matInput [(ngModel)]="form.fechaContrasena" name="form.fechaContrasena"
+                    placeholder="&Uacute;ltima actualizaci&oacute;n" (keyup)="onFormChange()" readonly>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="tipo == 'U' && accion == 'detalle'" fxLayout="row">
+                <mat-form-field *ngIf="accion == 'detalle'">
+                    <input matInput [(ngModel)]="form.creado" name="form.creado"
+                    placeholder="Fecha de creaci&oacute;n" (keyup)="onFormChange()" readonly>
+                </mat-form-field>
+            </div>
+
+            <!--<div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="form.password" name="form.password"
+                    placeholder="Contraseña" (keyup)="onFormChange()">
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="tipo == 'U'" fxLayout="row">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="form.passwordConfirm" name="form.passwordConfirm"
+                    placeholder="Confirmar Contraseña" (keyup)="onFormChange()">
+                </mat-form-field>
+            </div>-->
+    
+            <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="20px">
+                <button mat-button type="button" routerLink="/portal/roles-usuarios" align="left">Volver</button>
+                <button *ngIf="tipo == 'U' && accion == 'detalle' && !passwdReestablecida" mat-button (click)="openDialog(id)" color="accent" align="left">Restablecer Contraseña</button>
+                <button *ngIf="accion != 'detalle'" mat-raised-button type="submit" color="primary" align="rigth" [disabled]="group.invalid || loading ">Guardar</button>
+            </div>
+
+        </form>
+
+    </mat-card-content>
+</mat-card>

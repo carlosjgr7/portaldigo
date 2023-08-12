@@ -1,0 +1,54 @@
+<h1 mat-dialog-title style="background-color: gray;width: fit-content;" class="text-white">&nbsp;&nbsp;&nbsp;{{ title
+  }}:&nbsp;&nbsp;&nbsp;</h1>
+
+<div mat-dialog-actions style="
+    justify-content: space-between;
+    margin-inline: 5px;
+    margin-top: -20px;
+  ">
+  <div class="sub-title">
+    <span class="text-muted">Nro Solicitud:&nbsp;</span>
+    <span style="font-weight: bold" *ngIf="gestiones">{{ gestiones[0]["nrosolic"] }}</span>
+  </div>
+
+  <div class="sub-title">
+    <span class="text-muted">Fecha:&nbsp;</span>
+    <span style="font-weight: bold">{{ fecha }}</span>
+  </div>
+</div>
+
+<div mat-dialog-content style="overflow: hidden; overflow-y: auto">
+  <div style="max-width: 550px">
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px;margin-top: 5px;">
+      <div class="sub-title">
+        <span class="text-muted">Acci&oacute;n:&nbsp;</span>
+        <span style="font-weight: bold">Activaci&oacute;n</span>
+      </div>
+
+      <div class="sub-title">
+        <span class="text-muted">Usuario:&nbsp;</span>
+        <span style="font-weight: bold">{{ afiliado["usuario"] }}</span>
+      </div>
+
+      <div class="sub-title">
+        <span class="text-muted">Saldo disponible:&nbsp;</span>
+        <span style="font-weight: bold">{{ monto }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <br />
+  <hr />
+</div>
+
+<div mat-dialog-actions style="justify-content: space-around">
+  <button mat-raised-button color="primary" (click)="activar()" style="margin: 5px"
+    [disabled]="disabledButtonA === true">
+    Activar
+  </button>
+
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "roles-usuarios.component.scss"
+    ],
+    "names": [],
+    "file": "roles-usuarios.component.css"
+}

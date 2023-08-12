@@ -1,0 +1,52 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50">
+                            <mat-card-title>Palabras reservadas </mat-card-title>
+                    </div>
+                </div>
+                <br>
+                <div align="center">
+                        <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                            {{global_alert.mensaje}}
+                        </div>
+                    </div>
+                <table class="table" *ngIf="hay_palabras">
+
+                    <tr style="height: 50px;">
+                        <th>
+                            <div class="font-medium">
+                                Palabra
+                            </div>
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    <tr *ngFor="let palabra_reservada of palabras_reservadas" style="height: 50px;">
+                        <td>
+                            {{palabra_reservada.palabra}}
+                        </td>
+                        <td align="center" style="cursor:pointer;">
+                            <a routerLink="actualizar/{{palabra_reservada.id}}" class="link">Modificar</a> | 
+                            <a (click)="openDialog(palabra_reservada.id ,palabra_reservada.palabra)" class="link">Eliminar</a>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+
+                <div align="right">
+                    <button mat-fab color="primary" routerLink="crear" class="font-medium"><mat-icon>plus_one</mat-icon></button>
+                </div>
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

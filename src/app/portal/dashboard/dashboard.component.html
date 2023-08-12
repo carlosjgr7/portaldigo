@@ -1,0 +1,152 @@
+<div fxLayout="row" fxLayoutWrap="wrap" *ngIf="load">
+
+        <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <div align="center" *ngIf="global_alert.act">
+                        <div class="{{global_alert.type}}">
+                            {{global_alert.mensaje}}
+                        </div>
+                    </div>
+              
+        </div>  
+    <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+          <mat-card-content>
+              <!-- Row -->
+              <div class="d-flex no-block">
+                  <!-- column -->
+                  <div class="m-r-10 no-shrink">
+                      <button mat-fab mat-card-icon class="shadow-none bg-inverse  bg-success">
+                          <mat-icon>account_circle</mat-icon>
+                      </button>
+                  </div> 
+                  <!-- column -->
+                  <div>
+                      <h3 class="m-0">{{tablero.afiliadosNaturalesHoy}}</h3>
+                      <h6 class="text-muted m-0">Nuevos afiliados naturales</h6>
+                  </div> 
+                  
+              </div>      
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+          <mat-card-content>
+              <!-- Row -->
+              <div class="d-flex no-block">
+                  <!-- column -->
+                  <div class="m-r-10 no-shrink">
+                      <button mat-fab mat-card-icon class="shadow-none bg-inverse  bg-primary">
+                          <mat-icon>account_circle</mat-icon>
+                      </button>
+                  </div> 
+                  <!-- column -->
+                  <div>
+                      <h3 class="m-0">{{tablero.afiliadosJuridicosHoy}}</h3>
+                      <h6 class="text-muted m-0">Nuevos afiliados jurídicos</h6>
+                  </div> 
+                  
+              </div>      
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+          <mat-card-content>
+              <!-- Row -->
+              <div class="d-flex no-block">
+                  <!-- column -->
+                  <div class="m-r-10 no-shrink">
+                      <button mat-fab mat-card-icon class="shadow-none bg-inverse  bg-accent">
+                          <mat-icon>attach_money</mat-icon>
+                      </button>
+                  </div> 
+                  <!-- column -->
+                  <div>
+                      <h4 class="m-0">BS {{tablero.montoPagosEnviadosHoy}}</h4>
+                      <h6 class="text-muted m-0">{{tablero.cantidadPagosEnviadosHoy}} pagos enviados</h6>
+                  </div> 
+                  
+              </div>      
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+          <mat-card-content>
+              <!-- Row -->
+              <div class="d-flex no-block">
+                  <!-- column -->
+                  <div class="m-r-10 no-shrink">
+                      <button mat-fab mat-card-icon class="shadow-none bg-inverse  bg-success">
+                          <mat-icon>attach_money</mat-icon>
+                      </button>
+                  </div> 
+                  <!-- column -->
+                  <div>
+                      <h4 class="m-0">BS {{tablero.montoPagosRecibidosHoy}}</h4>
+                      <h6 class="text-muted m-0">{{tablero.cantidadPagosRecibidosHoy}} pagos recibidos</h6>
+                  </div> 
+                  
+              </div>      
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+</div>
+
+<div  *ngIf="loading && !load" fxLayout="row" fxLayoutWrap="wrap">
+    <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+    <br/>
+    </div>
+    <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content align="center">   
+                <mat-label *ngIf="loading" style="margin-bottom: 50px;" class="sub-title text-muted" align="center">Cargando Dashboard</mat-label>
+                <mat-progress-bar *ngIf="loading" mode="indeterminate" value="40"></mat-progress-bar>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+    <br/>
+    </div>
+</div> 
+
+<div fxLayout="row" fxLayoutWrap="wrap" *ngIf="load">
+        <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+            <mat-card>
+                <mat-card-content>
+                    <!-- column -->
+                    <mat-icon class="text-info">laptop</mat-icon>
+                    <h3 class="m-0">{{tablero.sesiones}}</h3>
+                    <h5 class="text-muted m-t-0  m-b-10">Sesiones</h5>
+                    <mat-progress-bar mode="indeterminate" value="40"></mat-progress-bar>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <!-- column -->
+                        <mat-icon class="text-info">person</mat-icon>
+                        <h3 class="m-0">{{tablero.afiliadosNaturales}}</h3>
+                        <h5 class="text-muted m-t-0  m-b-10">Afiliados naturales</h5>
+                        <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div fxFlex.gt-sm="33.3" fxFlex.gt-xs="100" fxFlex="100">
+                    <mat-card>
+                        <mat-card-content>
+                            <!-- column -->
+                            <mat-icon class="text-info">account_balance</mat-icon>
+                            <h3 class="m-0">{{tablero.afiliadosJuridicos}}</h3>
+                            <h5 class="text-muted m-t-0  m-b-10">Afiliados jurídicos</h5>
+                            <mat-progress-bar mode="determinate" value="100"></mat-progress-bar>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+  </div>

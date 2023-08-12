@@ -1,0 +1,78 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        <mat-card-header>
+                            <mat-card-title>Tipos de identificaci&oacute;n</mat-card-title>
+                            <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                        </mat-card-header>
+                    </div>
+                </div>
+                <br>
+                <div align="center">
+                        <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                            {{global_alert.mensaje}}
+                        </div>
+                    </div>
+                <table class="table" *ngIf="hay_palabras">
+
+                    <tr style="height: 50px;">
+                        <th>
+                            <div class="font-medium">
+                                C&oacute;digo
+                            </div>
+                        </th>
+                        <th>
+                            <div class="font-medium">
+                                Tipo persona
+                            </div>
+                        </th>
+                        <th>
+                            <div class="font-medium">
+                                Descripci&oacute;n
+                            </div>
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    <tr *ngFor="let tipo of tipos_identificacion" style="height: 50px;">
+                        <td>
+                            {{tipo.codigo}}
+                        </td>
+                        <td>
+                            {{tipo.tipoPersona}}
+                        </td>
+                        <td>
+                            {{tipo.descripcion}}
+                        </td>
+                        <td align="center">
+                            <mat-chip-list>
+                              <mat-chip *ngIf="tipo.activo" color="primary" selected="true">Activo</mat-chip>
+                                <mat-chip *ngIf="!tipo.activo" color="warn" selected="true">Inactivo</mat-chip>
+                            </mat-chip-list>
+                        </td>
+                        <td align="center" style="cursor:pointer;">
+                            <a routerLink="actualizar/{{tipo.id}}" class="link">Modificar</a> | 
+                            <a (click)="openDialog(tipo.id ,tipo.descripcion)" class="link">Eliminar</a>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+
+                <div align="right">
+                    <button mat-fab color="primary" routerLink="crear" class="font-medium"><mat-icon>plus_one</mat-icon></button>
+                </div>
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

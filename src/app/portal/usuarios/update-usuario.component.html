@@ -1,0 +1,17 @@
+<mat-card-header style="margin-left: -1.5%;">
+  <mat-card-title >ATENCI&Oacute;N</mat-card-title>
+  <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+</mat-card-header>
+<div mat-dialog-content>
+  <p *ngIf="!actualizado" align="justify">
+    ¿Est&aacute; seguro que desea guardar los cambios? 
+  </p>
+  <p *ngIf="mensaje_update" align="justify">{{mensaje_update}}</p>
+</div>
+<div align="right" *ngIf="!actualizado" mat-dialog-actions>
+  <button mat-button (click)="update(data.usuario)" tabindex="2">Si</button>
+  <button mat-button (click)="onNoClick()" tabindex="-1">No</button>
+</div>
+<div align="right" *ngIf="actualizado" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" tabindex="-1">Ok</button>
+</div>

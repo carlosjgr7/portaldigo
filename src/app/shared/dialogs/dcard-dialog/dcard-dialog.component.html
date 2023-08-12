@@ -1,0 +1,203 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+
+<div mat-dialog-actions style="
+    justify-content: space-between;
+    margin-inline: 5px;
+    margin-top: -20px;
+    margin-bottom: 2px;
+  ">
+  <div class="sub-title">
+    <span class="text-muted">Nro D-card:&nbsp;</span>
+    <span style="font-weight: bold">{{ pan_dcard }}</span>
+  </div>
+
+  <div class="sub-title">
+    <span class="text-muted">Status D-card:&nbsp;</span>
+    <span style="font-weight: bold">{{ staPan }}</span>
+  </div>
+</div>
+
+<div mat-dialog-content style="overflow: hidden; overflow-y: auto">
+  <div style="max-width: 1100px">
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px">
+      <div class="sub-title">
+        <span class="text-muted">Nombre y Apellido:&nbsp;</span>
+        <span style="font-weight: bold">{{ dcard["nombre"] }}</span>
+      </div>
+
+      <div class="sub-title" *ngIf="dcard['fecemi']; else sinFemi">
+        <span class="text-muted">Fecha Emisi&oacute;n:&nbsp;</span>
+        <span style="font-weight: bold">{{
+          dcard["fecemi"] | date: "dd-MM-yyyy"
+          }}</span>
+      </div>
+
+      <ng-template #sinFemi>
+        <div class="sub-title">
+          <span class="text-muted">Fecha Emisi&oacute;n:&nbsp;</span>
+          <span style="font-weight: bold">N/A</span>
+        </div>
+      </ng-template>
+
+      <div class="sub-title" *ngIf="dcard['fevcto']; else sinFvcto">
+        <span class="text-muted">Fecha Vencimiento:&nbsp;</span>
+        <span style="font-weight: bold">{{
+          dcard["fevcto"].substring(0, 2) +
+          "/" +
+          dcard["fevcto"].substring(2, 4)
+          }}</span>
+      </div>
+
+      <ng-template #sinFvcto>
+        <div class="sub-title">
+          <span class="text-muted">Fecha Vencimiento:&nbsp;</span>
+          <span style="font-weight: bold">N/A</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <br />
+
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px">
+      <div class="sub-title">
+        <span class="text-muted">Direcci&oacute;n de Env&iacute;o:&nbsp;</span>
+
+        <div>
+          <span style="font-weight: bold">{{ dcard["direc1"] }}</span>
+        </div>
+        <div>
+          <span style="font-weight: bold">{{ dcard["direc2"] }}</span>
+        </div>
+        <div>
+          <span style="font-weight: bold">{{ dcard["direc3"] }}</span>
+        </div>
+      </div>
+
+      <div class="sub-title">
+        <div>
+          <span class="text-muted">Identificaci&oacute;n:&nbsp;</span>
+          <span style="font-weight: bold">{{ dcard["identificacion"] }}</span>
+        </div>
+        <div>
+          <span class="text-muted">Tel&eacute;fono:&nbsp;</span>
+          <span style="font-weight: bold">{{ dcard["numero_telefono"] }}</span>
+        </div>
+      </div>
+    </div>
+
+    <br />
+  </div>
+
+  <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="gestionesGral !== 'nada'">
+    <!-- column -->
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER" *ngIf="gestionesGral !== 'nada'">
+      <button mat-raised-button color="primary" (click)="onVerGeneral()" style="margin: 5px">
+        Ver General
+      </button>
+    </div>
+  </div>
+
+  <hr />
+  <div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+      <div>
+        <table class="table">
+          <tr align="center">
+            <th>Nro Gesti&oacute;n</th>
+            <th>Solicitud</th>
+            <th>Aprobaci&oacute;n</th>
+            <th>Emboce</th>
+            <th>Recep. Banco</th>
+            <th>Distribuci&oacute;n</th>
+            <th>Activaci&oacute;n</th>
+          </tr>
+          <tr>
+            <td colspan="7" align="center" *ngIf="loading">
+              <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+            </td>
+          </tr>
+          <tr *ngFor="let gestion of gestiones" style="height: 50px" align="center">
+            <td>
+              {{ gestion.nrosolic }} <br /><span style="font-weight: bold">{{
+                gestion.tipoGestion
+                }}</span>
+            </td>
+            <td>
+              {{ gestion.fec_solic | date: "dd-MM-yyyy" }} <br />
+              <span style="font-weight: bold">{{ gestion.usuario_solic }}</span>
+            </td>
+            <td>
+              {{ gestion.fec_apr | date: "dd-MM-yyyy" }} <br />
+              <span style="font-weight: bold">{{ gestion.usuario_aprob }}</span>
+            </td>
+            <td>
+              {{ gestion.fec_emb | date: "dd-MM-yyyy" }} <br />
+              <span style="font-weight: bold">{{ gestion.usuario_emb }}</span>
+            </td>
+            <td>
+              {{ gestion.fec_gra | date: "dd-MM-yyyy" }}<br />
+              <span style="font-weight: bold">{{ gestion.usuario_gra }}</span>
+            </td>
+            <td>
+              {{ gestion.fec_dist | date: "dd-MM-yyyy" }}<br />
+              <span style="font-weight: bold">{{ gestion.usuario_dist }}</span>
+            </td>
+            <td>
+              {{ gestion.act_fec | date: "dd-MM-yyyy" }}<br />
+              <span style="font-weight: bold">{{ gestion.usuario_act }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <br />
+</div>
+
+<div mat-dialog-actions style="justify-content: space-between" *ngIf="staPan !== 'No Aprobada'">
+  <button mat-raised-button color="primary" (click)="onGestiones()" style="margin: 5px" *ngIf="staPan === 'Solicitud'">
+    Gestiones
+  </button>
+
+  <button mat-raised-button color="primary" (click)="onDistribucion()" style="margin: 5px"
+    *ngIf="staPan === 'Recep Banco'">
+    Gestiones
+  </button>
+
+  <button mat-raised-button color="primary" (click)="onActivacion()" style="margin: 5px"
+    *ngIf="staPan === 'Distribución'">
+    Activaci&oacute;n
+  </button>
+
+  <button mat-raised-button color="primary" (click)="onBloqueo()" style="margin: 5px" *ngIf="staPan === 'Activación'">
+    Bloqueo
+  </button>
+  <button mat-raised-button color="primary" (click)="onPerdida()" style="margin: 5px" *ngIf="staPan === 'Activación'">
+    P&eacute;rdida
+  </button>
+  <button mat-raised-button color="primary" (click)="onDeterioro()" style="margin: 5px" *ngIf="staPan === 'Activación'">
+    Deterioro
+  </button>
+  <button mat-raised-button color="primary" (click)="onRobo()" style="margin: 5px" *ngIf="staPan === 'Activación'">
+    Robo
+  </button>
+  <button mat-raised-button color="primary" (click)="onGeneral()" style="margin: 5px">
+    General
+  </button>
+  <button mat-raised-button color="primary" (click)="onDesbloqueo()" style="margin: 5px" *ngIf="staPan === 'Bloqueo'">
+    Desbloqueo
+  </button>
+
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>
+
+<div mat-dialog-actions style="justify-content: center" *ngIf="staPan === 'No Aprobada'">
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>

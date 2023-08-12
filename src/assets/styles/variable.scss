@@ -1,0 +1,153 @@
+/*
+Template Name: Material Pro Admin
+Author: Themedesigner
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+$font-path: "/assets/style/font";
+// Variables
+@import url('https://fonts.google.com/sr?family=Effra&token=MT');
+
+@font-face {
+  font-family: Effra;
+  src: url("/assets/styles/font/Effra_Std_Lt.ttf") format("opentype");
+}
+
+
+$bodyfont:'Effra';
+$headingfont:'Effra'; 
+
+
+@import '~@angular/material/theming';
+
+/*Material Theme Colors*/
+
+@include mat-core(); 
+
+$blue: (
+    50: #ffffff,
+    100: #dde6f3,
+    200: #b4c9e4,
+    300: #7fa3d1,
+    400: #6992c9,
+    500: #5282c1,
+    600: #4072b4,
+    700: #38649d,
+    800: #305687,
+    900: #262262,
+    A100: #ffffff,
+    A200: #dde6f3,
+    A400: #6992c9,
+    A700: #38649d,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white,
+    )
+);
+/*Material Theme Colors*/
+
+$primary: mat-palette($blue, 900);
+//$primary: mat-palette($mat-green, 700);
+$accent: mat-palette($mat-green, 600);
+$warn: mat-palette($mat-red);
+$theme: mat-light-theme($primary, $primary, $warn);
+$background: map-get($theme, background);
+$foreground: map-get($theme, foreground);
+
+@include mat-core();
+
+$custom-typography: mat-typography-config( 
+  $font-family: 'Effra, sans-serif'
+);
+
+// Override the typography in the core CSS.
+@include mat-core($custom-typography);
+
+// Default Theme
+@include angular-material-theme($theme);
+
+
+// Dark Theme
+
+/*Theme Colors*/
+ 
+$topbar: #2196f3;
+$sidebar: #fff;
+$sidebar-white: #e5edef;
+$sidebar-alt:#f2f6f8;
+$bodycolor: #eef5f9;
+$headingtext: #455a64;
+$bodytext: #67757c; 
+$sidebar-text: #607d8b;
+$sidebar-icons: #99abb4 ;
+
+$font-16: 16px;
+
+$light-text: #a6b7bf;
+$themecolor: #00aeef;
+$themecolor-alt: #26c6da;
+$themecolor-dark: #028ee1;
+
+/*bootstrap Color*/
+$danger: #fc4b6c;
+$success: #00aeef;
+$warning: #ffb22b;
+$primary: #262262;
+$info: #322e6d;
+$inverse: #2f3d4a;
+$muted: #99abb4;
+$dark: #263238;
+$light: #f2f4f8;
+$extra-light: #ebf3f5;
+$secondary: #727b84;
+
+/*Light colors*/
+$light-danger: #f9e7eb;
+$light-success: #e8fdf8;
+$light-warning: #fff8ec;
+$light-primary: #f1effd;
+$light-info: #e3f3fd;
+$light-inverse: #f6f6f6;
+$light-megna: #e0f2f4; 
+
+
+
+$danger-dark: #e6294b;
+$success-dark: #1eacbe;
+$warning-dark: #e9ab2e;
+$primary-dark: #262262;
+$info-dark: #028ee1;
+$red-dark: #d61f1f;
+$inverse-dark: #232a37;
+$dark-transparent:rgba(0, 0, 0, 0.05);
+
+/*Normal Color*/
+$white: #ffffff;
+$red: #fb3a3a;
+$yellow: #a0aec4;
+$purple: #7460ee;
+$blue: #02bec9;
+$megna: #00897b;
+
+/*Extra Variable*/
+$rgt: right;
+$lft: left;
+$border: rgba(120, 130, 140, 0.13);
+$table-border:#f3f1f1;
+$card-brd:#d7dfe3;
+$dark-text: #848a96;
+$radius: 4px;
+$form-brd: #d9d9d9;
+

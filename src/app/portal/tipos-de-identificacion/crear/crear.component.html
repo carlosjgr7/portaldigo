@@ -1,0 +1,83 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                        Nuevo tipo de identificaci&oacute;n
+                    </div>
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" align="right">
+                      <mat-slide-toggle
+                          class="example-margin"
+                          [color]="'primary'"
+                          [checked]="tipos_identificacion.activo"
+                          [(ngModel)]="tipos_identificacion.activo"
+                          name="checked">
+                        Activo  
+                      </mat-slide-toggle>
+                    </div>
+                </div>
+                <br>
+                <form>
+                    <div align="center">
+                        <div class="alert-success" *ngIf="mensaje_success">
+                            {{mensaje_success}}
+                        </div>
+                    </div>
+
+                    <div align="center">
+                        <div class="alert-danger" *ngIf="mensaje">
+                            {{mensaje}}
+                        </div>
+                    </div>
+
+                    <mat-radio-group [(ngModel)]="tipos_identificacion.tipoPersona" name="tipoPersona">
+                        <mat-radio-button class="example-margin" color="primary" value="B">
+                          Natural
+                        </mat-radio-button>
+                        <mat-radio-button style="margin-left: 10px;" class="example-margin" color="accent" value="A">
+                          Juridica
+                        </mat-radio-button>
+                    </mat-radio-group><br>
+                    <br>
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="C&oacute;digo"
+                         name="codigo" 
+                         [(ngModel)]="tipos_identificacion.codigo"
+                         maxlength="1" appLettersNumbersOnly> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Descripci&oacute;n"
+                         name="descripcion" 
+                         [(ngModel)]="tipos_identificacion.descripcion"
+                         maxlength="24" appFilter> 
+                    </mat-form-field>
+
+                    
+                    
+                    <div align="right">
+                        <a mat-button routerLink="/portal/catalogo/tipos-de-identificacion" color="basic" align="left">Volver</a>
+                        <button mat-button
+                            *ngIf="!creado"
+                            (click)="crear()" 
+                            color="'primary'" 
+                            align="rigth"
+                            >
+                            Crear
+                        </button>
+                    </div>
+                </form>
+
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

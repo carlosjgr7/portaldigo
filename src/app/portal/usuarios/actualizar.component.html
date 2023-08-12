@@ -1,0 +1,81 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="usuario.id">
+                    <!-- column -->
+                    <mat-card-header style="margin-left: -1.5%;">
+                        <mat-card-title>Actualizar usuario </mat-card-title>
+                        <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                      </mat-card-header>
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" align="right">
+                        <mat-slide-toggle
+                              class="example-margin"
+                              [color]="primary"
+                              [checked]="usuario.estatus"
+                              [(ngModel)]="usuario.estatus"
+                              name="checked">
+                            Activo  
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+                <br>
+                <div align="center">
+                    <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                        {{global_alert.mensaje}}
+                    </div>
+                </div>
+                <form>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Usuario"
+                         name="usuario" 
+                         [(ngModel)]="usuario.usuario"
+                         maxlength="50" disabled={{loading}} appLettersNumbersOnly> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Nombre"
+                         name="nombre"
+                         [(ngModel)]="usuario.nombreCompleto"
+                         maxlength="49" disabled={{loading}} appFilter> 
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                         placeholder="Correo"
+                         name="correo" 
+                         [(ngModel)]="usuario.correo"
+                         maxlength="49" disabled={{loading}} appEmail> 
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="load">
+                        <mat-select placeholder="Rol de usuario" name="rol" [(ngModel)]="rol">
+                          <mat-option *ngFor="let rol of roles" value="{{rol.id}}">{{rol.descripcion}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                    <div align="right">
+                        <button mat-button routerLink="/portal/usuarios" color="basic" align="left">Volver</button>
+                        <button mat-button
+                            *ngIf="!actualizado"
+                            (click)="openDialog()" 
+                            color="primary" 
+                            align="rigth"
+                            >
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

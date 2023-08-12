@@ -1,0 +1,110 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+      <mat-card>
+          <mat-card-content>
+              <mat-card-title>Usuarios </mat-card-title>
+              <div fxLayout="row" fxLayoutWrap="wrap">
+                  <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                      <mat-form-field>
+                        <input matInput placeholder="Filtro" name="filtro" [(ngModel)]="filtro" appFilter>
+                      </mat-form-field>
+                    </div>
+                    <!-- column -->
+                    <div fxFlex.gt-sm="30" fxFlex.gt-xs="50" align="LEFT" style="padding-top: 1%;">
+                      <button (click)="buscar(filtro)" mat-raised-button color="accent">
+                        BUSCAR
+                      </button>
+                     </div>
+                </div>
+              
+                <div fxLayout="row" fxLayoutWrap="wrap" style="padding-top: 5%;">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                        <div align="center">
+                            <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                                {{global_alert.mensaje}}
+                            </div>
+                        </div>
+                        <br>
+                          <div>
+                          <table class="table" *ngIf="! global_alert.act">
+                            <tr>
+                                <th></th>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Estatus</th>
+                                <th></th>
+                            </tr>
+                            <tr *ngIf="loading">
+                                  <td colspan="6" align="center" *ngIf="loading">
+                                      <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                                  </td>
+                              </tr>
+                            <tr *ngFor="let usuario of usuarios" style="height: 50px;">
+                              <td align="center">
+                                  <a routerLink="detalles/{{usuario.id}}" class="link">
+                                        <mat-icon>search</mat-icon> 
+                                  </a>
+                              </td>
+                              <td>
+                                  {{usuario.usuario}}
+                              </td>
+                              <td>
+                                  {{usuario.nombreCompleto}}
+                              </td>
+                              <td>{{usuario.correo}}</td>
+                              <td *ngIf="usuario.estatus == 'A'" 
+                              align="center">
+                                  <mat-chip-list>
+                                    <mat-chip color="accent" selected="true">
+                                        Activo 
+                                    </mat-chip>
+                                  </mat-chip-list>
+                              </td>
+                              <td *ngIf="usuario.estatus == 'I'" 
+                              align="center">
+                                  <mat-chip-list>
+                                    <mat-chip color="warn" selected="true">
+                                        Inactivo
+                                    </mat-chip>
+                                  </mat-chip-list>
+                              </td>
+                              <td *ngIf="usuario.estatus == 'B'" 
+                              align="center">
+                                  <mat-chip-list>
+                                    <mat-chip color="warn" selected="true">
+                                        Bloqueado
+                                    </mat-chip>
+                                  </mat-chip-list>
+                              </td>
+                              <td align="center" style="cursor:pointer;">
+                                <a routerLink="actualizar/{{usuario.id}}" class="link">
+                                        Modificar
+                                  </a>
+                                  |
+                                <a (click)="openDialog(usuario.id ,usuario.usuario)" 
+                                      class="link">
+                                    Eliminar
+                                </a>
+                            </td>
+                            </tr>
+                          </table>
+                          <br>
+                          <div align="CENTER" *ngIf="n_usuarios == 25  && usuarios!=null && usuarios.length > 0">
+                              <button align="" mat-raised-button color="primary" (click)="verMas()">VER MAS</button><mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                          </div>
+                          <div align="right" style="padding-top: 1%;">
+                              <button mat-fab color="primary" routerLink="crear" class="font-medium">
+                                <mat-icon>plus_one</mat-icon>
+                              </button>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+          </mat-card-content>
+      </mat-card>    
+  </div>
+</div>

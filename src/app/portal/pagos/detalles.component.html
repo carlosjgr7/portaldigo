@@ -1,0 +1,102 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- Card column -->
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-header class="bg-primary text-white">
+                <mat-card-title>DETALLE DE PAGO</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+            </mat-card-header>
+
+            <div *ngIf="loading"  align="center" style="margin-top: 50px; margin-bottom: 50px;">
+              <mat-spinner *ngIf="loading"  matSuffix diameter="35"></mat-spinner>
+              <br/>
+              <mat-label *ngIf="loading" style="margin-bottom: 50px;" class="sub-title text-muted">Cargando Datos del Pago</mat-label>
+              <br/>
+            </div>
+            <mat-card-content>
+                <mat-list *ngIf="pago != null">
+                  <mat-list-item> 
+                    <h3 matLine>Canal: </h3>
+                    <p matLine class="text-muted">{{pago.canal.nombre}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Fecha de solicitud: </h3>
+                    <p matLine class="text-muted">{{pago.fechaSolicitud | date : 'dd-MM-yyyy HH:mm a'}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Fecha de pago: </h3>
+                    <p matLine class="text-muted">{{pago.fechaPago | date : 'dd-MM-yyyy HH:mm a'}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Emisor: </h3>
+                    <p matLine class="text-muted">{{pago.bancoEmisor.nombreCorto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Tel&eacute;fono emisor: </h3>
+                    <p matLine class="text-muted">{{pago.anulacion && pago.infoAnulacion ? pago.telefonoReceptor : pago.telefonoEmisor}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Identificaci&oacute;n emisor: </h3>
+                    <p matLine class="text-muted">{{ pago.anulacion && pago.infoAnulacion ? pago.identificacionReceptor : pago.identificacionEmisor }}</p> 
+                  </mat-list-item>
+                  <mat-list-item > 
+                    <h3 matLine>Receptor: </h3> 
+                    <p matLine class="text-muted">{{pago.bancoReceptor.nombreCorto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Tel&eacute;fono receptor: </h3>
+                    <p matLine class="text-muted"> {{pago.anulacion && pago.infoAnulacion ? pago.telefonoEmisor : pago.telefonoReceptor}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Identificaci&oacute;n receptor: </h3>
+                    <p matLine class="text-muted">{{ pago.anulacion && pago.infoAnulacion ? pago.identificacionEmisor : pago.identificacionReceptor}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Moneda: </h3>
+                    <p matLine class="text-muted">{{pago.moneda}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Monto: </h3>
+                    <p matLine class="text-muted">{{pago.monto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Comisión: </h3>
+                    <p matLine class="text-muted">{{pago.porcomision}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Neto: </h3>
+                    <p matLine class="text-muted">{{pago.neto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Concepto: </h3>
+                    <p matLine class="text-muted">{{pago.concepto}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>Referencia: </h3>
+                    <p matLine class="text-muted">{{pago.anulacion && pago.infoAnulacion ? pago.infoAnulacion.referenciaReverso : pago.referencia}}</p> 
+                  </mat-list-item>
+                  <mat-list-item> 
+                    <h3 matLine>C&oacute;digo switch: </h3>
+                    <p matLine class="text-muted">{{pago.codigoSwitch}} - {{pago.mensajeSwitch}}</p> 
+                  </mat-list-item>
+                  <mat-list-item *ngIf="pago.sucursal"> 
+                    <h3 matLine>Sucursal: </h3>
+                    <p matLine class="text-muted">{{pago.sucursal && pago.sucursal.nombre ? pago.sucursal.nombre + (pago.sucursal.eliminado ? ' (E)' : ''): ''}}</p> 
+                  </mat-list-item>
+                  <mat-list-item *ngIf="pago.sucursal && pago.sucursal.caja"> 
+                    <h3 matLine>Caja: </h3>
+                    <p matLine class="text-muted">{{pago.sucursal && pago.sucursal.caja ? pago.sucursal.caja.codigo + (pago.sucursal.caja.eliminado ? ' (E)' : '') : ''}}</p> 
+                  </mat-list-item>
+                  <mat-list-item *ngIf="pago.sucursal && pago.sucursal.infoUsuario"> 
+                    <h3 matLine>Usuario: </h3>
+                    <p matLine class="text-muted">{{pago.sucursal && pago.sucursal.infoUsuario ? pago.sucursal.infoUsuario.usuario : ""}}</p> 
+                  </mat-list-item>
+    
+              </mat-list>
+              <div align="right">
+                  <button mat-button routerLink="/portal/pagos" color="basic" align="left">Volver</button>
+              </div>
+            </mat-card-content>
+        </mat-card>    
+    </div>
+</div>

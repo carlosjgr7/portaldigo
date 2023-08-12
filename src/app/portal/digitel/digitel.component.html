@@ -1,0 +1,266 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+      <mat-card>
+          <mat-card-content>
+              <mat-card-title>Conciliaci&oacute;n Digitel </mat-card-title>
+          </mat-card-content>
+          <mat-tab-group (selectedTabChange)="onSequenceChangeEvent()">
+              <mat-tab label="Recargas">
+                <mat-card-content>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker" 
+                            placeholder="Desde" 
+                            [(ngModel)]="fechaDesde" 
+                            name="fechaDesde" disabled>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                          <mat-form-field>
+                            <input matInput 
+                            [min]="fechaDesde" [max]="fechaMax"
+                            [matDatepicker]="picker3" 
+                            placeholder="Hasta"
+                            [(ngModel)]="fechaHasta" 
+                            name="fechaHasta" disabled>
+                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                            <mat-datepicker #picker3  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono emisor" name="telefonoEmisor" [(ngModel)]="telefonoEmisor" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono receptor" name="telefonoReceptor" [(ngModel)]="telefonoReceptor" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+                          <button align="" mat-raised-button color="accent" (click)="buscar('PP', null)">BUSCAR</button>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="n_recargasRecibidas != 0">
+                          <button align="" mat-raised-button color="primary" (click)="conciliacion('PP')">ARCHIVO CONCILIAC&Oacute;N</button>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="center">
+                          <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                              {{global_alert.mensaje}}
+                          </div>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="!global_alert.act" style="padding-top: 5%;">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <table class="table">
+                            <tr>
+                              <th></th>
+                              <th>Fecha</th>
+                              <th >Tel&eacute;fono emisor</th>
+                              <th >Tel&eacute;fono receptor</th>
+                              <th >Monto</th>
+                              <th >Concepto</th>
+                              <th >Referencia</th>
+                              <th></th>
+                            </tr>
+                            <tr>
+                              <td colspan="7" align="center" *ngIf="loading">
+                                <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                              </td>
+                            </tr>
+                            <tr *ngFor="let recarga of recargasRecibidas" style="height: 50px;">
+                                <td align="center">
+                                    <a routerLink="detalles/{{recarga.id}}" class="link">
+                                        <mat-icon>search</mat-icon> 
+                                    </a>
+                                </td>
+                                <td>{{recarga.fechaTransaccion | date : 'dd/MM/yyyy HH:mm a'}}</td>
+                                <td>
+                                  {{recarga.numeroOrigen}}
+                                </td>                                
+                                <td>
+                                  {{recarga.numeroDestino}}
+                                </td>
+                                <td>
+                                  {{recarga.montoRecarga}}
+                                </td>
+                                <td>
+                                  {{recarga.concepto}}
+                                </td>
+                                <td>
+                                  {{recarga.referencia_2}}
+                                </td>
+                                <td *ngIf="recarga.estatus == 'APROBADO'" 
+                                align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="accent" selected="true">
+                                          <mat-icon>done</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td *ngIf="recarga.estatus != 'APROBADO'" align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="warn" selected="true">
+                                          <mat-icon>clear</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <div align="CENTER" *ngIf="n_eventos == 25">
+                            <button mat-raised-button color="primary" (click)="buscar('PP', ultimo_id)">VER MAS</button>
+                        </div>
+                      </div>
+                  </div>
+                </mat-card-content>
+              </mat-tab>
+              <mat-tab label="Pago de Facturas">
+                <mat-card-content>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker4" 
+                            placeholder="Desde" 
+                            [(ngModel)]="fechaDesde" 
+                            name="fechaDesde" disabled>
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker #picker4  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                          <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker5" 
+                            placeholder="Hasta"
+                            [(ngModel)]="fechaHasta" 
+                            name="fechaHasta" disabled>
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono emisor" name="telefonoEmisor" [(ngModel)]="telefonoEmisor" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono receptor" name="telefonoReceptor" [(ngModel)]="telefonoReceptor" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+                          <button align="" mat-raised-button color="accent" (click)="buscar('PF', null)">BUSCAR</button>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="n_pagoDeFacturasRecebidos != 0">
+                          <button align="" mat-raised-button color="primary" (click)="conciliacion('PF')">ARCHIVO DE CONCILIACI&Oacute;N</button>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                              {{global_alert.mensaje}}
+                          </div>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="!global_alert.act">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Fecha</th>
+                                <th align="center">Tel&eacute;fono emisor</th>
+                                <th align="center">Tel&eacute;fono receptor</th>
+                                <th align="center">Monto</th>
+                                <th align="center">Concepto</th>
+                                <th align="center">Referencia</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                              <td colspan="7" align="center" *ngIf="loading">
+                                <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+                              </td>
+                            </tr>
+                            <tr *ngFor="let recarga of pagoDeFacturasRecebidos" style="height: 50px;">
+                                <td align="center">
+                                    <a routerLink="detalles/{{recarga.id}}" class="link">
+                                        <mat-icon>search</mat-icon> 
+                                    </a>
+                                </td>
+                                <td>{{recarga.fechaTransaccion | date : 'dd/MM/yyyy HH:mm a'}}</td>
+                                <td>
+                                  {{recarga.numeroOrigen}}
+                                </td>                                
+                                <td>
+                                  {{recarga.numeroDestino}}
+                                </td>
+                                <td>
+                                  {{recarga.montoRecarga}}
+                                </td>
+                                <td>
+                                  {{recarga.concepto}}
+                                </td>
+                                <td>
+                                  {{recarga.referencia_2}}
+                                </td>
+                                <td *ngIf="recarga.estatus == 'APROBADO'" 
+                                align="center">
+                                    <mat-chip-list>
+                                      <mat-chip  class="color-success" selected="true">
+                                          <mat-icon >done</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td *ngIf="recarga.estatus != 'APROBADO'" align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="warn" selected="true">
+                                          <mat-icon>clear</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <div align="CENTER">
+                            <button *ngIf="n_eventos == 25" mat-raised-button color="primary" (click)="buscar('PF', ultimo_id)">VER MAS</button>
+                        </div>
+                      </div>
+                  </div>
+                </mat-card-content>
+              </mat-tab>
+          </mat-tab-group>
+      </mat-card>    
+  </div>
+</div>

@@ -1,0 +1,169 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{title}}</mat-card-title>
+    <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+      <div [class]="message.class">{{message.text}}</div>
+    </div>
+    <div  *ngIf="global_alert.act" fxLayout="row" fxLayoutWrap="wrap">
+      <!-- column -->
+      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="center">
+          <div class="{{global_alert.type}}" >
+              {{global_alert.mensaje}}
+          </div>
+      </div>
+  </div>
+    <form [formGroup]="form" (ngSubmit)="onSearch()">
+      <div fxLayout="row" fxLayoutWrap="wrap">
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="form.controls['desde']" [matDatepicker]="pickerDesde" placeholder="Desde" 
+            date readonly (dateChange)="onFormChange(tableInit)">
+            <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="form.controls['hasta']" [matDatepicker]="pickerHasta" placeholder="Hasta" 
+            date readonly (dateChange)="onFormChange(tableInit)">
+            <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idEstatusRecarga']" [disabledControl]="loading"
+            placeholder="Estatus *" (selectionChange)="onFormChange(tableInit)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of estatusRecarga" [value]="option.id">
+                {{ option.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idMedioCarga']" [disabledControl]="loading"
+            placeholder="Medio Carga" (selectionChange)="onFormChange(tableInit)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of mediosCarga" [value]="option.id">{{ option.descripcion }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idBancoOrigen']" [disabledControl]="loading"
+            placeholder="Banco Origen" (selectionChange)="onFormChange(tableInit)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of bancos" [value]="option.id">{{ option.nombreCorto }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idBancoDestino']" [disabledControl]="loading"
+            placeholder="Banco Destino" (selectionChange)="onFormChange(tableInit)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of bancosMovimientos" [value]="option.id">{{ option.nombreCorto }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="p-10" fxLayoutAlign="center">
+        <button type="submit" class="m-t-10" color="primary"
+        mat-raised-button [disabled]="form.invalid || loading">
+          <mat-icon>search</mat-icon> Buscar
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="tableInit != undefined && tableInit.data.length != 0">
+      <app-table [tableInit]="tableInit" *ngIf="tableInit != undefined" (tableEvents)="onTableEvents($event)"></app-table>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="aConciliar">
+  <mat-card-header>
+    <mat-card-title>Movimientos Bancarios</mat-card-title>
+    <mat-spinner *ngIf="loadingMovimientos" matSuffix diameter="30"></mat-spinner>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <form [formGroup]="formMovimientos" (ngSubmit)="onSearchMovimientos()">
+      <div fxLayout="row" fxLayoutWrap="wrap">
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="formMovimientos.controls['desde']" [matDatepicker]="pickerDesde" placeholder="Desde" 
+            date readonly (dateChange)="onFormChange(movimientosTable)">
+            <mat-datepicker-toggle *ngIf="!loadingMovimientos" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="formMovimientos.controls['hasta']" [matDatepicker]="pickerHasta" placeholder="Hasta" 
+            date readonly (dateChange)="onFormChange(movimientosTable)">
+            <mat-datepicker-toggle *ngIf="!loadingMovimientos" matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="formMovimientos.controls['idEstatusMov']" [disabledControl]="loadingMovimientos"
+            placeholder="Estatus *" (selectionChange)="onFormChange(movimientosTable)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of estatusMovimientos" [value]="option.id">
+                {{option.descripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="formMovimientos.controls['banco']" [disabledControl]="loading"
+            placeholder="Banco *" (selectionChange)="onFormChange(movimientosTable)">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of bancosMovimientos" [value]="option.id">
+                {{option.nombreCorto ? option.nombreCorto : option.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="formMovimientos.controls['referencia']" placeholder="Referencia" (appNumbersOnly)="onFormChange(movimientosTable)">
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="25" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="formMovimientos.controls['descripcion']" placeholder="Descripción" (keyup)="onFormChange(movimientosTable)" appFilter>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="p-10" fxLayoutAlign="center">
+        <button type="submit" class="m-t-10" color="primary" mat-raised-button [disabled]="formMovimientos.invalid || loading">
+          <mat-icon>search</mat-icon> Buscar
+        </button>
+      </div>
+    </form>
+          
+    <!-- Tabla -->
+    <div class="table-container" *ngIf="movimientosTable != undefined && movimientosTable.data.length != 0">
+      <app-table 
+        [tableInit]="movimientosTable" 
+        *ngIf="movimientosTable != undefined" 
+        (tableEvents)="onTableEvents($event)" >
+      </app-table>                  
+    </div>
+
+  </mat-card-content>
+</mat-card>

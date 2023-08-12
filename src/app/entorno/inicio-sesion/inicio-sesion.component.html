@@ -1,0 +1,73 @@
+<div class="login-register"  style="background-image:url(assets/images/background/inicio-sesion.jpg);">
+    <div class="login-register-box" >
+        <mat-card style="border-radius: 25px;background-image:url(assets/images/background/background_main.png);margin-bottom: 15%;">
+            <mat-card-content>
+                <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="padding-right: 5%;">  
+                    <div class="text-center"><img alt="homepage" style="width: 100%;margin-top: 60%;" src="assets/images/logo-icon.png"></div>
+                </div>  
+                <form [formGroup]="form" (ngSubmit)="onIniciarSesion()" style="width: 60%;">
+                    <div fxLayout="row" fxLayoutWrap="wrap">
+                     
+                            <div fxLayout="row" fxLayoutWrap="wrap">
+                                <!-- col full-->
+                                <div fxFlex.xl="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="80%" class="titulo-inicio" style="text-align:center;"> 
+                                    <mat-label style="font-size: 20px;font-weight: bold;color:#262262;">Inicia Sesión</mat-label>
+
+                                </div>
+                                <div fxFlex.xl="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="80%"  class="titulo-inicio" style="padding-top: 5%;">
+                                    <mat-label style="font-size: 16px;font-weight: bold;color:#262262;">Usuario</mat-label>
+                                    <mat-form-field appearance="outline" style="padding: 0.1em 0 0 0;">
+                                        <input matInput placeholder="Usuario" [formControl]="form.controls['username']" style="color: black; font-size: 15px;" appLettersNumbersOnly> 
+                                    </mat-form-field> 
+                                    <small *ngIf="form.controls['username'].hasError('required') && form.controls['username'].touched" class="text-danger support-text">Debes ingresar tu usuario</small>
+                                </div>
+                                <!-- col full-->
+                                <div fxFlex.xl="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="80%" class="titulo-inicio">
+                                     <mat-label style="font-size: 16px;font-weight: bold;color:#262262;">Contraseña</mat-label>
+                                    <mat-form-field appearance="outline" style="padding: 0.1em 0 0 0;">
+                                        <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Contraseña" [formControl]="form.controls['password']"  style="color: black; font-size: 15px;" appPassword>
+                                         <button mat-icon-button matSuffix color="primary" type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="!hide" >
+                                        <mat-icon style="color:#262262;">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </button> 
+                                       <!-- <i class="fa" [ngClass]="{'fa-eye-slash': hide, 'fa-eye': !hide }" fxFlex.gt-sm="20" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: -10%;" (click)="hide = !hide" style="color:#262262;font-size:20px;"></i> -->
+                                      </mat-form-field>
+                                    <small *ngIf="form.controls['password'].hasError('required') && form.controls['password'].touched" class="text-danger support-text">Debes ingresar tu contraseña</small>
+                                </div>
+                                <!-- col full-->
+                                <div *ngIf="mensaje" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                                    <small class="text-danger support-text">{{ mensaje }}</small>
+                                </div>
+                                <div  *ngIf="alert_caduco_sesion" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                                    <small *ngIf="mensaje == null" class="text-danger support-text">{{ alert_caduco_sesion }}</small>
+                                </div>
+                                <!-- col half-->
+                                <!-- <div fxFlex.gt-sm="50" fxFlex.gt-xs="50">
+                                    <mat-checkbox color="warn">Recordarme</mat-checkbox>
+                                </div> -->
+                                <!-- col full-->
+                                <div class="titulo-inicio" *ngIf="!pass_caduco"fxFlex.xl="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="80%" style="margin-top: -10%;">
+                                    <button mat-raised-button color="primary" class="btn-block btn-lg m-t-20 m-b-20" type="submit" [disabled]="!form.valid">Ingresa</button> 
+                                </div>
+                                <div class="titulo-inicio" *ngIf="pass_caduco" fxFlex.xl="100%" fxFlex.lg="100%" fxFlex.md="100%" fxFlex.sm="80%" style="margin-top: -10%;">
+                                    <button mat-raised-button color="accent" class="btn-block btn-lg m-t-20 m-b-20" (click)="openDialog(form.controls['username'].value)">Cambiar</button> 
+                                </div>
+                             </div>
+                        
+                    </div>   
+                   
+                  </form>
+             </mat-card-content>
+        </mat-card>
+    </div>
+  
+</div>
+<footer class="footer-login " >
+    <small style="font-size: 16px;color: white;"></small>
+  
+    
+    <mat-toolbar class="toolbar-footer" style="display: block;">
+   
+     <small><b></b> </small>
+
+    </mat-toolbar>
+</footer>

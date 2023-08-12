@@ -1,0 +1,12 @@
+table {
+  border-collapse: collapse;
+}
+
+tr:nth-child(even) td {
+  background: #F1F1F1;
+}
+
+tr:nth-child(odd) td {
+  background: #FEFEFE;
+}
+/*# sourceMappingURL=eventos.component.css.map */

@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+  <p style="white-space: pre-line;">{{message}}</p>
+</div>
+<div class="row justify-content-md-center pad pdfStyle">
+    <pdf-viewer [src]="fileUrl" [render-text]="true" *ngIf="!isImg"
+    [zoom]="zoom" [show-borders]="true" [show-all]="false" [fit-to-page]="false" ></pdf-viewer>                      
+</div>
+<div class="justify-content-md-center pad " *ngIf="isImg">
+  <ngx-image-zoom  *ngIf="isImg" [thumbImage]="thumbnail" [magnification]="2" [enableScrollZoom]="false" [enableLens]="true"
+  [lensWidth]="100" [lensHeight]="80" [zoomMode]="'hover'"></ngx-image-zoom>
+</div>  
+<div>
+  <button *ngIf="!isImg" mat-raised-button color="primary" class="btn-md" (click)="cambiarZoomArchivo('Ampliar')"><mat-icon>search</mat-icon>+</button>
+  <button *ngIf="!isImg" mat-raised-button color="primary" class="btn-md" (click)="cambiarZoomArchivo('Reducir')"><mat-icon>search</mat-icon>-</button> 
+</div>  
+<div mat-dialog-actions align="center">
+  <button mat-raised-button (click)="onClick('Validar')" color="primary">Validar recaudo</button>
+  <button mat-button (click)="onClick('Cancelar')" color="warn">Cancelar</button>
+</div>

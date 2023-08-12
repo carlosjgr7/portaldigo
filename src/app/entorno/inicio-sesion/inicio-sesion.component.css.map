@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,uBAAuB,CAAC;EACpB,MAAM,EAAE,eAAe;CAC1B;;AAGD,MAAM,EAAE,SAAS,EAAE,KAAK;EACpB,AAAA,uBAAuB,CAAC;IACpB,MAAM,EAAE,eAAe;GAC3B;EACD,AAAA,eAAe,CAAC,mBAAmB,CAAA;IAC/B,SAAS,EAAE,KAAK;GACnB;EACD,AAAA,cAAc,CAAA;IACb,SAAS,EAAC,GAAG;GACb",
+    "sources": [
+        "inicio-sesion.component.scss"
+    ],
+    "names": [],
+    "file": "inicio-sesion.component.css"
+}

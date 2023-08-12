@@ -1,0 +1,32 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->    
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <!-- Row -->
+                <div fxLayout="row" fxLayoutWrap="wrap">
+                    <!-- column -->
+                    <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="font-medium">
+                            <mat-card-title>Palabras reservadas </mat-card-title>
+                    </div>
+                </div>
+
+                <mat-list *ngIf="hay_palabras">
+                    <mat-list-item *ngFor="let palabra_reservada of palabras_reservadas">
+                      <h3 matLine>{{palabra_reservada.palabra}}</h3>
+                      <p matLine class="text-muted" style="cursor:pointer;">
+                        <a routerLink="actualizar/{{palabra_reservada.id}}" class="link">Actualizar</a> | 
+                        <a (click)="openDialog(palabra_reservada.palabra)" class="link">Eliminar</a>
+                       </p>
+                    </mat-list-item>
+                </mat-list>
+                <div align="right">
+                    <button mat-fab color="primary" routerLink="crear">+</button>
+                </div>
+            </mat-card-content>
+            
+            
+        </mat-card>
+    </div>
+    <!-- column -->    
+</div>

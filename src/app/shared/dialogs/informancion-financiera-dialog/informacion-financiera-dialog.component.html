@@ -1,0 +1,73 @@
+<h1 mat-dialog-title>{{title}}</h1>
+
+
+<div mat-dialog-content style="overflow: hidden;overflow-y: auto;">
+    <div style="width: 950px;">
+        <div class="sub-title text-muted info-financiera-banco-header" >Banco</div>
+        <div class="sub-title text-muted info-financiera-tipo-cuenta-header" >Tipo Cuenta</div>
+        <div class="sub-title text-muted info-financiera-cuenta-header" >N&uacute;mero cuenta</div>
+        <div *ngIf="tipoPersona == 'A'" class="sub-title text-muted info-financiera-porcentaje-header" >%</div>
+    </div>
+    <br/>
+    <div class="p-t-20" *ngFor="let cuenta of cuentas;let i=index" style="width: 950px;height: 70px !important;">
+        <div class="sub-title info-financiera-banco-content" >{{cuenta.nombreBanco}}</div>
+        <div class="sub-title info-financiera-tipo-cuenta-content" [class.info-financiera-tipo-cuenta-aho-content]="cuenta.tipoCuenta == 'AHO'">{{cuenta.tipoCuenta}}</div>
+        <div class="sub-title info-financiera-cuenta-content" [class.info-financiera-cuenta-aho-content]="cuenta.tipoCuenta == 'AHO'">{{cuenta.cuentaBanco}}</div>
+        <div *ngIf="tipoPersona == 'A'" class="sub-title info-financiera-porcentaje-content" >{{cuenta.porcLiqAuto}}</div>
+        <div *ngIf="tipoPersona == 'B' && cuenta.porcLiqAuto != null" class="sub-title info-financiera-porcentaje-content" >{{cuenta.porcLiqAuto}}</div>
+
+    </div>
+    <br/>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" (click)="onClick(1)">{{yesOption}}</button>
+</div> 
+<!--
+<div mat-dialog-content fxLayout="row" fxLayoutWrap="wrap">
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <mat-card-title>{{title}} </mat-card-title>
+            </mat-card-content>
+      
+              
+                  <mat-card-content>
+                  
+                    <div fxLayout="row" fxLayoutWrap="wrap"  style="padding-top: 5%;">
+                        <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                            <table class="table">
+                              <tr>
+                                  <th></th>
+                                  <th>Banco</th>
+                                  <th>Tipo Cuenta</th>
+                                  <th>N&uacute;mero cuenta</th>
+                                  <th *ngIf="tipoPersona == 'A'">%</th>
+                                  <th></th>
+                              </tr>
+                              <tr *ngFor="let cuenta of cuentas;let i=index" style="height: 50px;">
+                                  <td align="center">
+                                   
+                                  </td>
+                                  <td>{{cuenta.nombreBanco}}</td>
+                                  <td>
+                                    {{cuenta.tipoCuenta}}
+                                  </td>
+                                  <td>
+                                    {{cuenta.cuentaBanco}}
+                                  </td>
+                                  <td *ngIf="tipoPersona == 'A'">
+                                    {{cuenta.porcLiqAuto}}
+                                  </td>
+                              </tr>
+                          </table>
+                          <br>
+                        </div>
+                    </div>
+                  </mat-card-content>
+               
+            
+            
+        </mat-card>    
+    </div>
+  </div>
+  -->

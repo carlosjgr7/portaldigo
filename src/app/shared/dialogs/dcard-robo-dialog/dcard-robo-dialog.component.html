@@ -1,0 +1,78 @@
+<h1 mat-dialog-title style="background-color: gray;width: fit-content;" class="text-white">&nbsp;&nbsp;&nbsp;{{ title
+  }}:&nbsp;&nbsp;&nbsp;</h1>
+
+<div mat-dialog-actions style="
+    justify-content: space-between;
+    margin-inline: 5px;
+    margin-top: -20px;
+  ">
+  <div class="sub-title">
+    <span class="text-muted">Nro Solicitud:&nbsp;</span>
+    <span style="font-weight: bold" *ngIf="gestiones">{{ gestiones[0]["nrosolic"] }}</span>
+  </div>
+
+  <div class="sub-title">
+    <span class="text-muted">Fecha:&nbsp;</span>
+    <span style="font-weight: bold">{{ fecha }}</span>
+  </div>
+</div>
+
+<div mat-dialog-content style="overflow: hidden; overflow-y: auto">
+  <div style="max-width: 550px">
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px;margin-top: 5px;">
+      <div class="sub-title">
+        <span class="text-muted">Acci&oacute;n:&nbsp;</span>
+        <span style="font-weight: bold">Robo</span>
+      </div>
+
+      <div class="sub-title">
+        <span class="text-muted">Usuario:&nbsp;</span>
+        <span style="font-weight: bold">{{ afiliado["usuario"] }}</span>
+      </div>
+
+      <div class="sub-title">
+        <span class="text-muted">Saldo disponible:&nbsp;</span>
+        <span style="font-weight: bold">{{ monto }}</span>
+      </div>
+    </div>
+
+    <br />
+
+    <div mat-dialog-actions style="justify-content: space-between; margin-inline: 5px">
+      <div class="sub-title" style="width: -webkit-fill-available;">
+        <span class="text-muted">Nota:&nbsp;</span>
+        <div class="form-group">
+          <textarea class="form-control" id="nota" name="nota" rows="3" style="border: double;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions style="margin-inline: 5px">
+    <span class="text-muted">Desea la emisi&oacute;n de una nueva DCard?:&nbsp;</span>
+
+    <input class="form-check-input" type="radio" name="proceso" id="proceso1" style="margin-left: 10px;" />
+    <label class="form-check-label" for="proceso1">
+      Sí
+    </label>
+
+    <input class="form-check-input" type="radio" name="proceso" id="proceso2" style="margin-left: 15px;" checked />
+    <label class="form-check-label" for="proceso2">
+      No
+    </label>
+
+  </div>
+
+  <br />
+  <hr />
+</div>
+
+<div mat-dialog-actions style="justify-content: space-around">
+  <button mat-raised-button color="primary" (click)="robo()" style="margin: 5px" [disabled]="disabledButtonA === true">
+    Guardar
+  </button>
+
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>

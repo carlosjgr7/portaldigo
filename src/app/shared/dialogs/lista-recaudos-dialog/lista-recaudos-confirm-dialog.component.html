@@ -1,0 +1,21 @@
+<mat-card-header style="margin-left: -1.5%;">
+    <mat-card-title >ATENCI&Oacute;N</mat-card-title>
+    <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+  </mat-card-header>
+  <div mat-dialog-content>
+    <p *ngIf="!actualizado" align="justify">
+      ¿Est&aacute; seguro que desea guardar los cambios en los recaudos? 
+    </p>
+    <p *ngIf="mensaje_update" align="justify">{{mensaje_update}}</p>
+  </div>
+  <div align="right" *ngIf="!actualizado" mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="update(data.id, data.recaudos); loading = true;" tabindex="2">Si</button>
+    <button mat-button (click)="onNoClick(1)" tabindex="-1">No</button>
+  </div>
+  <div align="right" *ngIf="actualizado && !error" mat-dialog-actions>
+    <button mat-button (click)="onNoClick(0)" tabindex="-1">Ok</button>
+  </div>
+  <div align="right" *ngIf="actualizado && error" mat-dialog-actions>
+    <button mat-button (click)="onNoClick(1)" tabindex="-1">Cerrar</button>
+  </div>
+  

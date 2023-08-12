@@ -1,0 +1,89 @@
+<mat-card>
+  <mat-card-header>
+      <mat-card-title>{{title}}</mat-card-title>
+      <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+  </mat-card-header>
+      
+  <mat-card-content>
+
+    <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+      <div [class]="message.class">{{message.text}}</div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSearch()">
+      <div fxLayout="row" fxLayoutWrap="wrap">
+
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="form.controls['desde']" [matDatepicker]="pickerDesde"
+            placeholder="Desde" date readonly (dateChange)="onFormChange()">
+              <button type="button" class="no-hover-effect no-width-effect" color="warn" 
+              *ngIf="!loading && form.value.desde != null" mat-button matSuffix 
+              (click)="form.controls['desde'].setValue(null);  onFormChange();">
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="form.controls['hasta']" [matDatepicker]="pickerHasta"
+            placeholder="Hasta" date readonly (dateChange)="onFormChange()">
+              <button type="button" class="no-hover-effect no-width-effect" color="warn" 
+              *ngIf="!loading && form.value.hasta != null" mat-button matSuffix 
+              (click)="form.controls['hasta'].setValue(null); onFormChange();">
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-datepicker-toggle *ngIf="!loading" matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <input matInput [formControl]="form.controls['idLote']" placeholder="N° Lote" (appNumbersOnly)="onFormChange()">
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idCuentaOrigen']" [disabledControl]="loading"
+            placeholder="Cuenta Origen" (selectionChange)="onFormChange()">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of cuentasOrigen" [value]="option.id">
+                {{ option.banco.nombreCorto}} **** {{ option.cuenta |  slice:-4 }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="33.2" fxFlex="100" class="p-10">
+          <mat-form-field>
+            <mat-select [formControl]="form.controls['idEstatus']" [disabledControl]="loading"
+            placeholder="Estado de Lote" (selectionChange)="onFormChange()">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let option of estatusLote" [value]="option.id">
+                {{ option.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="p-10" fxLayoutAlign="center">
+        <button type="submit" class="m-t-10" color="primary"
+        mat-raised-button [disabled]="form.invalid || loading">
+          <mat-icon>search</mat-icon> Buscar
+        </button>
+      </div>
+
+    </form>
+
+    <app-table 
+      [tableInit]="lotesTable" 
+      *ngIf="lotesTable != undefined && lotesTable.data.length > 0" 
+      (tableEvents)="onTableEvents($event)">
+    </app-table>
+
+  </mat-card-content>
+</mat-card>

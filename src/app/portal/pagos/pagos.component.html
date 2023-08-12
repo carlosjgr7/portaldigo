@@ -1,0 +1,276 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+      <mat-card>
+          <mat-card-content>
+            <mat-card-header>
+              <mat-card-title>Pagos </mat-card-title>
+              <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+            </mat-card-header>
+          </mat-card-content>
+          <mat-tab-group (selectedTabChange)="onSequenceChangeEvent()">
+              <mat-tab label="Emitidos">
+                <mat-card-content>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker" 
+                            placeholder="Desde" 
+                            [(ngModel)]="fechaDesde" 
+                            name="fechaDesde" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                          <mat-form-field>
+                            <input matInput 
+                            [min]="fechaDesde" [max]="fechaMax"
+                            [matDatepicker]="picker3" 
+                            placeholder="Hasta"
+                            [(ngModel)]="fechaHasta" 
+                            name="fechaHasta" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                            <mat-datepicker #picker3  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <mat-select placeholder="Banco emisor" name="banco" [(ngModel)]="banco">
+                            <mat-option>Todos</mat-option>
+                            <mat-option *ngFor="let banco of bancos" value="{{banco.id}}">{{banco.nombreCorto}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono emisor" name="telefono" [(ngModel)]="telefono" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Identificaci&oacute;n emisor" name="identificacion" [(ngModel)]="identificacion" appLettersNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+                          <button align="" mat-raised-button color="accent" (click)="buscar('D', null)">BUSCAR</button>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="n_pagos != 0">
+                          <button align="" mat-raised-button color="primary" (click)="excel(1)">EXCEL</button>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="center">
+                          <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                              {{global_alert.mensaje}}
+                          </div>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="!global_alert.act" style="padding-top: 5%;">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Fecha</th>
+                                <th>Emisor</th>
+                                <th>Tel&eacute;fono emisor</th>
+                                <th>Identificaci&oacute;n emisor</th>
+                                <th>Monto</th>
+                                <th>Descripci&oacute;n</th>
+                                <th></th>
+                            </tr>
+                            <tr *ngFor="let pago of pagos" style="height: 50px;">
+                                <td align="center">
+                                    <a routerLink="detalles/{{pago.id}}/DEBITO" class="link">
+                                        <mat-icon>search</mat-icon> 
+                                    </a>
+                                </td>
+                                <td>{{pago.fechaSolicitud | date : 'dd/MM/yyyy HH:mm a'}}</td>
+                                <td>
+                                  {{pago.bancoEmisor.nombreCorto}}
+                                </td>
+                                <td>
+                                  {{pago.anulacion && pago.infoAnulacion ? pago.telefonoReceptor : pago.telefonoEmisor}}
+                                </td>
+                                <td>
+                                  {{ pago.anulacion && pago.infoAnulacion ? pago.identificacionReceptor : pago.identificacionEmisor }}
+                                </td>
+                                <td>
+                                  {{pago.monto}}
+                                </td>
+                                <td>
+                                  {{pago.descTransaccion}}
+                                </td>
+                                <td *ngIf="pago.estatus == 'APROBADO'" 
+                                align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="accent" selected="true">
+                                          <mat-icon>done</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td *ngIf="pago.estatus != 'APROBADO'" align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="warn" selected="true">
+                                          <mat-icon>clear</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <div *ngIf="n_pagos == 25  && fechaDesde != undefined  && fechaHasta != undefined && pagos!=null && pagos.length > 0" align="CENTER" style="display: flex;">
+                          <button mat-raised-button color="primary" (click)="verMas('D', ultimo_id)">VER MAS</button>              <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+
+                        </div>
+                      </div>
+                  </div>
+                </mat-card-content>
+              </mat-tab>
+              <mat-tab label="Recibidos">
+                <mat-card-content>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker4" 
+                            placeholder="Desde" 
+                            [(ngModel)]="fechaDesde" 
+                            name="fechaDesde" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker #picker4  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+                          <mat-form-field>
+                            <input matInput 
+                            [min]="startDate" [max]="fechaMax"
+                            [matDatepicker]="picker5" 
+                            placeholder="Hasta"
+                            [(ngModel)]="fechaHasta" 
+                            name="fechaHasta" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5  disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <mat-select placeholder="Banco receptor" name="banco" [(ngModel)]="banco">
+                              <mat-option>Todos</mat-option>
+                            <mat-option *ngFor="let banco of bancos" value="{{banco.id}}">{{banco.nombreCorto}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Tel&eacute;fono receptor" name="telefono" [(ngModel)]="telefono" appNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex.gt-sm="33.33" fxFlex="100" class="p-10">
+                        <mat-form-field>
+                          <input matInput placeholder="Identificaci&oacute;n receptor" name="identificacion" [(ngModel)]="identificacion" appLettersNumbersOnly>
+                        </mat-form-field>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="right" style="padding-right: 5%;">
+                          <button align="" mat-raised-button color="accent" (click)="buscar('C', null)">BUSCAR</button>
+                      </div>
+                      <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" align="left" style="padding-left: 5%;" *ngIf="n_pagosRecibidos != 0">
+                          <button align="" mat-raised-button color="primary" (click)="excel(2)">EXCEL</button>
+                      </div>
+                  </div>
+                  <br>
+                  <div fxLayout="row" fxLayoutWrap="wrap">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <div *ngIf="global_alert.act" class="{{global_alert.type}}" >
+                              {{global_alert.mensaje}}
+                          </div>
+                      </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutWrap="wrap" *ngIf="!global_alert.act">
+                      <!-- column -->
+                      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+                          <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Fecha</th>
+                                <th>Receptor</th>
+                                <th align="center">Tel&eacute;fono receptor</th>
+                                <th align="center">Identificaci&oacute;n receptor</th>
+                                <th align="center">Monto</th>
+                                <th>Descripci&oacute;n</th>
+                                <th></th>
+                            </tr>
+                            <tr *ngFor="let pago of pagosRecibidos" style="height: 50px;">
+                                <td align="center">
+                                    <a routerLink="detalles/{{pago.id}}/CREDITO" class="link">
+                                        <mat-icon>search</mat-icon> 
+                                    </a>
+                                </td>
+                                <td>{{pago.fechaSolicitud | date : 'dd/MM/yyyy HH:mm a'}}</td>
+                                <td>
+                                  {{pago.bancoReceptor.nombreCorto}}
+                                </td>
+                                <td align="center">
+                                  {{pago.anulacion && pago.infoAnulacion ? pago.telefonoEmisor : pago.telefonoReceptor}}
+                                </td>
+                                <td align="center">
+                                  {{ pago.anulacion && pago.infoAnulacion ? pago.identificacionEmisor : pago.identificacionReceptor}}
+                                </td>
+                                <td align="center">
+                                  {{pago.monto}}
+                                </td>
+                                <td>
+                                  {{pago.descTransaccion}}
+                                </td>
+                                <td *ngIf="pago.estatus == 'APROBADO'" 
+                                align="center">
+                                    <mat-chip-list>
+                                      <mat-chip  class="color-success" selected="true">
+                                          <mat-icon >done</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td *ngIf="pago.estatus != 'APROBADO'" align="center">
+                                    <mat-chip-list>
+                                      <mat-chip color="warn" selected="true">
+                                          <mat-icon>clear</mat-icon> 
+                                      </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <div *ngIf="n_pagos == 25  && fechaDesde != undefined  && fechaHasta != undefined && pagos!=null && pagos.length > 0" align="CENTER">
+                            <button  mat-raised-button color="primary" (click)="verMas('C', ultimo_id)">VER MAS</button> <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                        </div>
+                      </div>
+                  </div>
+                </mat-card-content>
+              </mat-tab>
+          </mat-tab-group>
+      </mat-card>    
+  </div>
+</div>

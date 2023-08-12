@@ -1,0 +1,37 @@
+/* Resuelve problema de flechas de sort en tablas
+El problema viene dado por angular y el comprtamiento de las tablas dentro de tabs
+Se ocultan las flechas, que en este componente no se busca que esten
+
+referencia: https://github.com/angular/components/issues/7291
+*/
+::ng-deep .mat-sort-header-arrow.ng-trigger.ng-trigger-arrowPosition {
+    opacity: 0;
+}
+
+::ng-deep .mat-sort-header-pointer-left.ng-trigger.ng-trigger-leftPointer{
+    transform: rotate(-45deg);
+}
+
+::ng-deep .mat-sort-header-pointer-right.ng-trigger.ng-trigger-rightPointer{
+    transform: rotate(45deg);
+}
+
+/**
+Para modificar estilos originales de ng-autocomplete
+*/
+::ng-deep .autocomplete-container {
+    box-shadow: none !important;
+    font-family: Effra, sans-serif;
+    height: 18px !important;
+
+}
+
+::ng-deep .autocomplete-container .input-container input {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    font-family: Effra, sans-serif !important;
+    padding: 0 0 !important;
+    line-height: 18px !important;
+    height: 18px !important;
+    background-color: transparent !important;
+}

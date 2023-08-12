@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+
+<div mat-dialog-actions style="
+    justify-content: space-between;
+    margin-inline: 5px;
+    margin-top: -20px;
+    margin-bottom: 2px;
+  ">
+  <div class="sub-title">
+    <span class="text-muted">Nombre y Apellido:&nbsp;</span>
+    <span style="font-weight: bold">{{ dcard["nombre"] }}</span>
+  </div>
+</div>
+
+<div mat-dialog-content style="overflow: hidden; overflow-y: auto">
+  <hr />
+  <div fxLayout="row" fxLayoutWrap="wrap">
+    <!-- column -->
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" align="CENTER">
+      <div>
+        <table class="table">
+          <tr align="center">
+            <th>Nro Gesti&oacute;n</th>
+            <th>Solicitud</th>
+            <th>Pan</th>
+            <th>Nota</th>
+          </tr>
+          <tr>
+            <td colspan="7" align="center" *ngIf="loading">
+              <mat-progress-bar mode="indeterminate" value="50"></mat-progress-bar>
+            </td>
+          </tr>
+          <tr *ngFor="let gestion of gestiones" style="height: 50px" align="center">
+            <td>{{ gestion.nrosolic }} <br><span style="font-weight: bold;">{{gestion.tipoGestion}}</span></td>
+            <td style="white-space: nowrap;">{{ gestion.fec_solic | date: "dd-MM-yyyy" }} <br> <span
+                style="font-weight: bold;">{{gestion.usuario_solic}}</span></td>
+            <td>{{ numPan(gestion.pan) }}</td>
+            <td>{{ gestion.coment }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <br />
+</div>
+
+
+<div mat-dialog-actions style="justify-content: center">
+  <button mat-raised-button color="secondary" (click)="onClick(1)" style="margin: 5px">
+    {{ yesOption }}
+  </button>
+</div>

@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-header>
+      <mat-card-title>{{title}}</mat-card-title>
+      <mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+  </mat-card-header>
+  
+  <mat-card-content>
+      <div *ngIf="message" fxLayout="row" fxLayoutAlign="center">
+          <div [class]="message.class">{{message.text}}</div>
+      </div>
+
+      <div>
+          <mat-tab-group (selectedTabChange)="onTabChange($event)" [(selectedIndex)]="currentTabIndex">
+              <mat-tab *ngFor="let tab of tabs" label="{{tab.nombre}}" >
+                  <p class="small-text"> {{tab.descripcion}} </p>
+
+                  <div *ngIf="tab.table && tab.table.data.length > 0">
+                      <app-table 
+                          [tableInit]="tab.table" 
+                          *ngIf="tab.table != undefined && tab.table.data.length > 0" 
+                          (tableEvents)="onTableEvents($event)">
+                      </app-table>
+                      <br/>
+                        <div align="CENTER" *ngIf="n_usuarios == 25  && usuarios!=null && usuarios.length > 0 && tab.tipo == 'U'">
+                          <button align="" mat-raised-button color="primary" (click)="verMas()">VER MAS</button><mat-spinner *ngIf="loading" matSuffix diameter="30"></mat-spinner>
+                        </div>
+                  </div>
+                  <div class="m-b-10 m-r-10" align="right"> <!-- Class para prevenir overflow -->
+                      <button mat-fab color="primary" (click)="onCrearModificar()" class="font-medium">
+                          <mat-icon>plus_one</mat-icon>
+                      </button>
+                  </div>
+
+              </mat-tab>
+          </mat-tab-group>
+      </div>
+
+  </mat-card-content>
+</mat-card>

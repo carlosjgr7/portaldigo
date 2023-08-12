@@ -1,0 +1,246 @@
+/* *******************************************************************
+*  Módulo de Tabla General
+*   Desarrollado por Luis Marval lmarval@fin-soft.net
+*   Fecha Creado: 21/11/2019
+*   Última Modificación: 4/05/2020
+*   Angular CLI: 6.0.5
+*   Node:  10.18.0
+*   Angular: 6.0.3
+
+*   Adaptación de versión node 12, angular 8
+********************************************************************** 
+
+Dependencias: (No provistos en carpeta del módulo)
+  "jspdf": "^1.5.3",
+  "jspdf-autotable": "^3.4.6",
+  "export-to-csv": "^0.2.1",
+  ExcelService
+  SubStringCheckPipe
+
+Uso: 
+Agregar al Html
+<app-table 
+    [tableInit]="randomTable" 
+    *ngIf="randomTable != undefined" 
+    (tableEvents)="onTableEvents($event)"> 
+<!-- se puede agregar a if randomTable.data.length > 0 que previene otros errores-->
+</app-table>
+randomTable es de tipo TableInitializer mas adelante se da un ejemplo.
+El if previene errores de inicializaciones antes de tiempo.
+
+Agregar en Ts:
+public randomTable: TableInitializer; // declaracion
+
+// Ej. inicializacion Table
+  this.randomTable = {
+    hasFooter: false,
+    hasFilter: true,
+    filterExpansion: [
+      {filterKey: 'cliente', admitedChildren: ['docIdentidad', 'nombre']}, 
+      {filterKey: 'tipoEstatusPedido', admitedChildren: ['nombre']},
+      {filterKey: 'apellido'}
+    ],
+    filterHeaders: [
+      {id: 'activo', type: 'select', options: [{ value: 0, nombre: '0' },{ value: 1, nombre: '1' },{ value: 2, nombre: '2' }]},
+      {id: 'id', type: 'select'},
+      {id: 'nombreCorto', type: 'select'},
+      {id: 'nombre', type: 'input'},
+    ],
+    hasPagination: true,
+    expandable: true,
+    expandRows: [
+      {title: 'Tu Titulo', row: [
+        {description: 'Maquina: ', accesor: (element: any) => `${element.maquina}`}, 
+        {description: 'Fecha Nacimiento: ', accesor: (element: any) => `${element.fechaNacimiento}` }, 
+      ]},
+    ],
+    canChangeColumns: true,
+    canExport: true,
+    exportData: {filename: 'PruebaTabla', title: 'PruebaTabla'},
+    dataInputType: 0,
+    data: this.dataTest,
+    columns: [
+      { id: 'id', name: 'Codigo Cliente', type: 'default', align: 'center',
+        accesor: (element: any) => `${element.id}`, displayable: true, exportable: true },
+      { id: 'docIdentidad', name:'Documento Identidad', type: 'default', 
+        accesor: (element: any) => `${element.docIdentidad}`, displayable: true, exportable: true },
+      { id: 'nombre', name:'Nombre', type: 'default', 
+        accesor: (element: any) => `${element.nombre}`, displayable: false, exportable: true },
+      { id: 'sector', name:'Sector', type: 'default', 
+        accesor: (element: any) => `${element.sector}`, displayable: true, exportable: true },
+      { id: 'actions', name:'', type: 'tableEvents', displayable: false, 
+        exportable: false, actions: [ {state: 'aproved', icon: 'check'} ], 
+        accesor: (element: any) => `${'actions'}`, },
+      { id: 'check', name:'', type: 'tableEvents', displayable: true, exportable: false,
+        accesor: (element: any) => `${'check'}`, },
+      { id: 'accion', name: 'Accion', type: 'tableEvents', displayable: true, exportable: false, 
+        accesor: (element: any) => `${'select'}`,},
+      { id: 'expandable', name: '', type: 'expandable', displayable: false, exportable: false},
+    ],
+  }
+
+  this.dataTest es llenada en el subscribe y esta llamada se hizo en el finalize, se recomienda seguir esa estrategia
+  No se ha probado exahustivamente que estrategias puedan generar problemas.
+
+  De momento Modificar el objeto cada vez que se quiera crear o modificar.
+    Objeto con sus tipos.. hacer llamada luego.
+
+  Se puede solo modificar el parametro deseado del initializer, 
+  pero en caso de la data o otros puede ser posible limpiar para prevenir que no se detecten los cambios
+
+  // Ej. Funcion para direccionar tableEvents 
+  onTableEvents(event) {
+    switch (event.event) {
+      case 'action':
+        delete event.event; 
+        this.onAction(event);
+        break;
+    
+      case 'check':
+        delete event.event;
+        this.onCheck(event);
+        break;
+
+      case 'checkAll':
+        delete event.event;
+        this.onCheckAll(event);
+        break;
+
+      case 'openSelect':
+        delete event.event;
+        if (event.tableId == 'movimientos') { this.openSelect(event); }
+        else { console.log('No se consiguio la función de manejo para el evento')}
+        break;
+
+      case 'select':
+        delete event.event;
+        this.onSelect(event);
+        break;
+
+      case 'total':
+        delete event.event;
+        this.onTotal(event);
+        break;
+
+      case 'expand':
+        delete event.event;
+        this.onExpand(event);
+        break;
+      
+      default:
+        console.log(event);
+        break;
+    }
+  }
+
+// Explicacion tableEvents respuesta
+tableEvents: $event -> {
+  event: string, 
+  // hara match con el string de los events de abajo
+  // si se agregan nuevos debe ser de forma similar
+  checked?: boolean, 
+  // en caso de ser 'check' o 'checkAll' devuelve el estado del check
+  objects?: any[], 
+  // en caso de ser checkAll devuleve una lista de elementos seleccionados
+  object?: any, 
+  // devulve el objeto con el que se interactuo aplica para varios
+  action?: string, 
+  // retorna el string correspondiente al boton que se le hizo click
+  total?: number, 
+  // retorna el total de la suma de la columna
+  id?: string
+  // si se define un id en el TableInitializer, aqui lo devolvemos
+  // en caso que se tenga varias instancias de tabla y se quiera diferenciar
+  // los eventos retornados
+  open?: boolean
+  // En caso de ser un openSelect se tiene si esta abierta la selection
+  }
+
+// comportamiento de events anteriores, dependiendo del event.event
+// deben venir la respuesta de una de estas formas.
+Check:      $event -> {checked: boolean, object: any}
+checkAll:   $event -> {checked: boolean, objects: any[]}  
+action:     $event -> {action: string, object: any}
+select:     $event -> {object: any}
+openSelect: $event -> {object: any, open: boolean}
+total:      $event -> total: number
+
+
+// Explicacion de parametros de TableInitializer
+randomTable = {
+    // De ser True en la difinicion de columnas,  
+    //    Se debe tener una columna en sum si se quiere una totalizacion
+    //    Para mostrar un mensaje como "Total" se debe tener una columna de tipo footerCol
+    //    donde se debe tener un atributo footer: String el cual sera el mensaje mostrado.
+  hasFooter: boolean,
+    // Es recomendable definir los id de las columnas, con el mismo valor a el accesor.
+    // de este modo mientras no sea anidado el filterPredicate Dinamico debe hacerlo funcionar.
+    // Las columnas con exportable false, no pasaran al filterPredicate
+    // Si hay problema con el Filter debe agregarse al filterExpansion.             
+  hasFilter: boolean,
+    //  FilterData {filterKey: string, admitedChildren?: string[]}
+  filterExpansion: FilterData[],
+    // FilterHeader { id: string, options?: any[], type: string, // 'select', 'input' }
+    // select options, si es undefined, se busca en los valores del id,
+    // los filtros hacen filterPredicate basado en la columna por lo que si se usa en conjunto con 
+    // hasFilter, esto podria danhar los filtros generales.
+    // al tener select sin options. Si el id de la columna no coincide con la primera parte del accesor, 
+    // se genera un error es buena idea buscar formas de mejorar la manera de poblar los filtros.
+  filterHeaders: FilterHeader[],            
+    // Al ser True se tiene se tiene paginacion en espanol
+  hasPagination: boolean,
+    // Al ser true se debe definir expandRows donde
+    // ExpandRows es un ExpandRow[], donde ExpandRow { title: string, row: ExpandData[], }
+    // si title es igual a '', no se muestra nada, este aparece en negritas y con ':',
+    // ExpandData {description: string, accesor: (element: any) => string,}    
+    // agregar column expandable en el lugar que se desea el boton que hace la expansion  
+  expandable: boolean,
+  expandRows?: ExportRow[],
+    // Al ser true, Ahora displayable, muestra las columnas en false, pero no permite
+    // quitarlas (no las muestra en el dialog)
+  canChangeColumns: boolean,
+    // Al ser true, se debe pasar un export data o se tendra los valores por defecto
+    // ExportData: {filename?: string, title?: string, array?: string[]}
+    // Default {filename: '', title: '', array: ['Copiar', 'Csv', 'Excel', 'PDF', 'Imprimir']}
+  canExport: boolean,
+  exportData?: ExportData,
+    // De momento solo esta difinido el tipo 0, que es pasando la data, si viene de un servicio
+    // se ha estado haciendo en el finalize(), pero podria estar en otro momento.
+    //   
+  dataInputType: number, // 0 - data, 1 - datasource, 2- url
+  data?: any[], // if inputType es 0 
+    // En las columnas se configura gran parte de la tabla, 
+    // se recomienda que el id sea igual que el accesor de ser posible, 
+    // siempre y cuando no sea un objeto, 
+    // para garantizar un mejor funcionamiento, en especial de los sort y filter y otros parecidos
+    // los tipos de columnas son: default, amount, date, actions, check, select, footerCol, sum
+    // Column { id: string; name?: string; displayable?: boolean; exportable?: boolean;  
+	  //  accesor?: Function; type?: string; footer?: string; actions?: actionsData[]; align?: string; boldHeader?: boolean}
+  columns: Column[],
+    // identificador de tabla para eventos y otros 
+  id?: string 
+    // tamaño de pagina para la paginacion, por defecto es 10
+  pageSize?: number
+}
+
+// column.align overrides predefined align
+// para tener checkAll la columna debetener id = 'checkAll'
+// displayable define si se muestra en el dialogo de sort columns, 
+//   se puede modificar el comportamiento en table.component.ts
+// column.accesor cuando los elementos son simples rempleza undefined por ''
+//    en caso de ser un objeto es decir que se tenga "producto.id" para prevenir
+//    errores de undefined agregar validacion "element.producto != undefined ? element.producto.id : '' "
+
+Referencias:
+https://netbasal.com/event-emitters-in-angular-13e84ee8d28c
+https://angular.io/guide/component-interaction
+https://stackoverflow.com/questions/41926598/passing-parameter-to-angular2-component
+https://stackoverflow.com/questions/49102724/angular-5-copy-to-clipboard // la mayoria reciben string
+<!-- mejorar espacio de hint -> 
+https://stackoverflow.com/questions/53684763/how-to-remove-space-bottom-mat-form-field
+// https://github.com/angular/components/issues/7975
+--> (linea 27 html)
+https://stackblitz.com/edit/dynamic-columns-mat-table (linea 20 html)
+
+
+*/

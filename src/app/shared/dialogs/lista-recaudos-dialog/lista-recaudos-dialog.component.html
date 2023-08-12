@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content style="overflow: hidden;">
+    <div style="width: 950px;">
+        <div class="sub-title text-muted" style="width: 137px; margin-right: 10px; float:left;">Tipo Recaudo</div>
+        <div class="sub-title text-muted" style="width: 137px; margin-right: 10px; float:left;">Enterado</div>
+        <div class="sub-title text-muted" style="width: 137px; margin-right: 10px; float:left;">Visualizar</div>
+    </div>
+    <br/>
+    <div class="p-t-20" *ngFor="let recaudo of recaudos;let i=index" style="width: 950px;">
+        <div class="sub-title" style="width: 137px; margin-right: 10px; float:left;" [class.text-muted]="!recaudo.recaudoObj">{{recaudo.tipoDocumento}}</div>
+        <div style="width: 137px; margin-right: 10px; float:left;">
+            <mat-checkbox [disabled]="!recaudo.recaudoObj" [(ngModel)]="recaudo.enterado" (change)="actualizarCambio(recaudo)"></mat-checkbox>
+        </div>
+        <div>
+            <button mat-icon-button [disabled]="!recaudo.recaudoObj" matSuffix color="primary" type="button" (click)="visualizarArchivo(i)" [attr.aria-label]="'Visualizar Archivo'" >
+                <mat-icon style="color:#262262;">{{!recaudo.recaudoObj ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </div>
+    </div>
+    <br/>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" (click)="onClick(1)">{{yesOption}}</button>
+  <button mat-button (click)="onClick(2)">{{noOption}}</button>
+</div>
