@@ -52,7 +52,7 @@
     "pdfjs-dist": "^2.0.943",
     "rxjs": "^6.2.0",
     "rxjs-compat": "^6.2.0",
-    "rxjs-tslint": "^0.1.4",
+    "rxjs-tslint": "^0.1.8",
     "xlsx": "^0.13.3",
     "zone.js": "^0.8.26"
   },
@@ -78,11 +78,11 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
-    "typescript": "^2.7.2"
+    "typescript": "2.8.3"
   },
   "volta": {
-    "node": "16.17.0",
-    "npm": "7.18.1",
+    "node": "18.5.0",
+    "npm": "9.1.0",
     "yarn": "1.22.0"
   }
 }
